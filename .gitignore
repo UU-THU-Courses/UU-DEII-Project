@@ -161,3 +161,4 @@ cython_debug/
 
 # Temporary files
 __temp__/
+uppmax-openrc.sh

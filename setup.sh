@@ -9,9 +9,6 @@ then
     exit "$?";
 fi
 
-# Change path to home directory
-cd $HOME
-
 # Perform updates and upgrade
 apt update; apt -y upgrade
 
