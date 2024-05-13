@@ -1,0 +1,27 @@
+services:
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  web:
+    image: 127.0.0.1:5000/webapp
+    build: ./webapp
+    ports:
+      - "5100:5100"
+    depends_on:
+      - rabbit
+  webcrawler:
+    image: 127.0.0.1:5000/webcrawler
+    build: ./webcrawler
+    depends_on:
+      - rabbit
+  controller:
+    image: 127.0.0.1:5000/controller
+    build: ./controller
+    depends_on:
+      - rabbit
