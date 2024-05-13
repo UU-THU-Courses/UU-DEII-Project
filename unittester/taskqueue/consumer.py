@@ -1,10 +1,17 @@
-import pika
+import pika, time
 
 class Consumer:
     def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq") -> None:
         self.connection = None
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password)))
-        self.channel = self.connection.channel()
+        while True:
+            try: 
+                self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password)))
+                self.channel = self.connection.channel()
+                break
+            except:
+                # Sleep for 60 seconds, probably the Rabbit 
+                # service is not up yet.
+                time.sleep(60)
 
     def declare_queue(self, queue, durable=True):
        self.channel.queue_declare(queue=queue, durable=durable)
