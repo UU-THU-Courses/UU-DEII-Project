@@ -1,0 +1,51 @@
+#cloud-config
+
+apt_update: true
+apt_upgrade: true
+
+users:
+ - name: ubuntu
+   sudo: ALL=(ALL) NOPASSWD:ALL
+   home: /home/ubuntu
+   shell: /bin/bash
+   ssh_authorized_keys:
+   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaqzR4jvxDRvlEmrDSQmtGv8XAPe9GQt6X6k1waRTk5hya4XHn7QljBovhmL9YkuhJbkLsgIc7DKHrfZ+kGb+Q06d2gCnYsEn1VVlJDqISBtmbU0Takv6HlZHYBPdGerTtvlqxVXUt3VXMIs2GPK3PNPNgDg6MpaEdfFQZKNEWzutwlRlXFOMlJH9NGCm1a3fqgsOtOWeFMr1G1L2JDMsvJmeUJXeZy40PxzIyxzsxlkFUVdo83ZTpuDhqm4jULflc1QIYNhxT6YmUAueeJzwcJTKgCyMNMUsU72iWaVCS0kGBGjgKwmZy4sT9ueU0qOH3TnALPuyukrsyRLt5Wje+pQnoXE7rb42H1nn4vbO/js8cPF38mzSliAIjhD7CxGu1D6riU3qZ24YcQWIqhyYo24NmqEKHezVkJNbRZdLD1z7a0wqcj3SX8LYzl2BJaKwN1qNnUjurl0EskPOHqgCJvHDGOzAeQylb+QDGo4p6ra/zKHSIz+Jw7RAJqyy9vU8= ubuntu@usama-cl3-clientvm
+
+packages:
+  - python3-pip
+  - python3-dev
+  - build-essential
+  - tmux
+  - apt-transport-https 
+  - ca-certificates 
+  - curl 
+  - software-properties-common
+  - pip3 install flask
+#  - rabbitmq-server
+
+byobu_default: system
+
+runcmd:
+  - printf "\n\nAdding docker repository ..."
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+  - apt-get update -y
+
+  - printf "\n\nInstalling dependencies ..."
+  - apt-get install -y docker-ce
+  - pip3 install pika
+
+  - printf "\n\nInitializing docker swarm ..."
+  - docker swarm init > swarm_out.text
+
+  - printf "\n\nStarting a local registry ..."  
+  - docker service create --name registry --publish published=5000,target=5000 registry:2
+
+  - printf "\n\nCloning core repository ..."
+  - git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git project
+
+  - printf "\n\nPushing images to registery ..."
+  - docker compose -f /project/unittester/compose.yaml push
+
+  - printf "\n\nDeploy the application stack on swarm ..."
+  - docker stack deploy --compose-file /project/unittester/compose.yaml unittester

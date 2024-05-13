@@ -1,0 +1,53 @@
+name: unittester
+
+services:
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  web:
+    build:
+      context: ./webapp
+      network: host
+    restart: always
+    ports:
+      - "5100:5100"
+    depends_on:
+      rabbit:
+        condition: service_healthy
+  webcrawler:
+    build: 
+      context: ./
+      dockerfile: ./webcrawler/Dockerfile
+      network: host
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    links:
+      - rabbit
+  controller:
+    build: 
+      context: ./
+      dockerfile: ./controller/Dockerfile
+      network: host
+    restart: on-failure
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    links:
+      - rabbit
+  # worker:
+  #   build:
+  #     context: ./worker
+  #     network: host
+

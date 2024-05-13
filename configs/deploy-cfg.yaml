@@ -1,0 +1,41 @@
+# A single configration file to rule them all
+
+github:
+  username: usamazf
+  apitoken: 
+
+search:
+
+ssh_secretkey_path: /home/ubuntu/.ssh/id_rsa
+ssh_publickey_path: /home/ubuntu/.ssh/id_rsa.pub
+
+instances:
+  headnode:
+    instance_flavor: ssc.medium
+    instance_source: Ubuntu 22.04 - 2024.01.15
+    authorized_keys: USAMA-ACCESS-KEY
+    private_network: UPPMAX 2024/1-4 Internal IPv4 Network
+    floating_ip_pool: null
+    floating_ip_addr: null
+    instance_configs: configs/headnode-cfg.yaml
+  workernodes:
+    numworkers: 1
+    workercfgs:
+      instance_flavor: ssc.medium
+      instance_source: Ubuntu 22.04 - 2024.01.15
+      authorized_keys: USAMA-ACCESS-KEY
+      private_network: UPPMAX 2024/1-4 Internal IPv4 Network
+      floating_ip_pool: null
+      floating_ip_addr: null
+      instance_configs: configs/worknode-cfg.yaml
+    # - workernode:
+    #     maxcount: 4
+    #     instance_flavor: ssc.small
+    #     instance_source: Ubuntu 22.04 - 2024.01.15
+    #     authorized_keys: USAMA-ACCESS-KEY
+    #     private_network: UPPMAX 2024/1-4 Internal IPv4 Network
+    #     floating_ip_pool: null
+    #     floating_ip_addr: null
+    #     instance_configs: configs/cloud-cfg.yaml
+
+
