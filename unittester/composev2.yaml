@@ -8,20 +8,41 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - frontend
+      - backend
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: always
   web:
     image: 127.0.0.1:5000/webapp
     build: ./webapp
     ports:
       - "5100:5100"
+    networks:
+      - frontend
     depends_on:
       - rabbit
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: always
   webcrawler:
     image: 127.0.0.1:5000/webcrawler
     build: ./webcrawler
+    networks:
+      - frontend
     depends_on:
       - rabbit
   controller:
     image: 127.0.0.1:5000/controller
     build: ./controller
+    networks:
+      - backend
     depends_on:
       - rabbit
+
+networks:
+  frontend:
+  backend:
