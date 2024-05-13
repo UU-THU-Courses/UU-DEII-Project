@@ -32,11 +32,14 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
             try:
                 r = requests.post(f"http://{head_ip}:5200/send-token", data={"head_ip": head_ip, "worker_ip": addr}, timeout=5)
                 status_code = r.status_code
+                print(f"Got status code: {status_code} ...")
             except:
+                print("Exception was thrown ...")
                 status_code = -1
             
-            print("Post link not available sleeping for 120 seconds ...")
-            time.sleep(120)
+            if status_code != 200
+                print("Post link not available sleeping for 120 seconds ...")
+                time.sleep(120)
 
     # Retrun worker ip addresses
     return ip_addresses
