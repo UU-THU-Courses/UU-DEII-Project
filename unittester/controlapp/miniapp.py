@@ -13,8 +13,8 @@ def send_token():
     global manager
     if manager:
         if request.method == "POST":
-            with open("/swarm-token", "r") as f:
-                token = f.readline()
+            with open("/swarm-token.txt", "r") as f:
+                token = f.readline().strip()
                 r = requests.post(f"http://{request.form['worker_ip']}:5200/init-node", data={"manager-addr": request.form["head_ip"], "manager-port": 2377, "swarm-token": f"{token}"})
             return "Success", 200
         else:
@@ -29,8 +29,9 @@ def init_node():
         if request.method == "POST":
             manager_addr = request.form["manager-addr"]
             manager_port = request.form["manager-port"]
-            swarm_token = request.form["swarm-token"]
-            subprocess.run(["docker", "swarm", "join", f"--token {swarm_token}", f"{manager_addr}:{manager_port}"])
+            swarm_token = request.form["swarm-token"].strip()
+            run_command = rf"docker swarm join --token {swarm_token} {manager_addr}:{manager_port}"
+            subprocess.call(run_command, shell=True)
             return "Success", 200
         else:
             return "Failure", 400

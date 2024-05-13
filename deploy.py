@@ -1,5 +1,5 @@
 import fire
-import requests
+import requests, time
 import random, subprocess, argparse
 
 from unittester.utils.requisition import create_instance
@@ -32,6 +32,8 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
                 status_code = r.status_code
             except:
                 status_code = -1
+            
+            time.sleep(60)
 
     # Retrun worker ip addresses
     return ip_addresses
