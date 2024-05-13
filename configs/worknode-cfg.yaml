@@ -4,12 +4,12 @@ apt_update: true
 apt_upgrade: true
 
 users:
- - name: ubuntu
-   sudo: ALL=(ALL) NOPASSWD:ALL
-   home: /home/ubuntu
-   shell: /bin/bash
-   ssh_authorized_keys:
-   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaqzR4jvxDRvlEmrDSQmtGv8XAPe9GQt6X6k1waRTk5hya4XHn7QljBovhmL9YkuhJbkLsgIc7DKHrfZ+kGb+Q06d2gCnYsEn1VVlJDqISBtmbU0Takv6HlZHYBPdGerTtvlqxVXUt3VXMIs2GPK3PNPNgDg6MpaEdfFQZKNEWzutwlRlXFOMlJH9NGCm1a3fqgsOtOWeFMr1G1L2JDMsvJmeUJXeZy40PxzIyxzsxlkFUVdo83ZTpuDhqm4jULflc1QIYNhxT6YmUAueeJzwcJTKgCyMNMUsU72iWaVCS0kGBGjgKwmZy4sT9ueU0qOH3TnALPuyukrsyRLt5Wje+pQnoXE7rb42H1nn4vbO/js8cPF38mzSliAIjhD7CxGu1D6riU3qZ24YcQWIqhyYo24NmqEKHezVkJNbRZdLD1z7a0wqcj3SX8LYzl2BJaKwN1qNnUjurl0EskPOHqgCJvHDGOzAeQylb+QDGo4p6ra/zKHSIz+Jw7RAJqyy9vU8= ubuntu@usama-cl3-clientvm
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    home: /home/ubuntu
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9/K3uqz7BCRBCMmqqQkkb3aJhUUkSwjX965iDioQlACGxgKmUaCujI5vr2N8jQuNwUa4zBXaVk+y6WFZVvnACb5Y92z6/YquBOcWp2bq7SJ+pTv7Q+EhYsukRgWsru1tiZtFdqCHKLORNCaaWv25qycYCDcOkTP9uD7uoFhkuyOc9ZjFJyaM2XKVb2+QgNcIBEuf7LlrUjRie+QuSO/D2FsCl1QZGzLzWUHU6pwvrqhfH65lDzFnUv56NOp59uMuZFIuTCAS5+D2h2yqGLG+OubGBJ+6b7zbCCIqxIlSCmsQvlobviGR/6gEUS6PqWqfIR/KibQwki8ZTwyWGYq8C8PnSUwZZjT2+ZYmQhzTz5XQVQpiY9UplkjfqtCb+mdw8YojB5IWHdinQ1e3LfYZuFiPb0m5DEZs7RwwWyJlK1W+rEGbHHYSEnjANoDEupBKHlawZYl2uQmqFcaF/Ug59NxrVW759ctbLaADdDL1TBekj+52gbAudE3H81JLcZE8= ubuntu@uz-clientvm
 
 packages:
   - python3-pip
@@ -20,38 +20,17 @@ packages:
   - ca-certificates 
   - curl 
   - software-properties-common
-  - pip3 install flask
-#  - rabbitmq-server
 
 byobu_default: system
 
 runcmd:
-  - printf "\nAdding docker repository ..."
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+  - printf "\n\nAdding docker repository ...\n"
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   - apt-get update -y
-  - printf "\nInstalling dependencies ..."
-  - apt-get install -y docker-ce
-  - pip3 install pika
-  - printf "\nInitializing docker swarm ..."
-  - docker swarm init > swarm_out.text
-  - printf "\nStarting a local registry ..."  
-  - docker service create --name registry --publish published=5000,target=5000 registry:2
-  - printf "\nCloning core repository ..."
-  - git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git project
-  - printf "\nPushing images to registery ..."
-  - docker compose -f /project/unittester/compose.yaml push
-  - printf "\nDeploy the application stack on swarm ..."
-  - docker stack deploy --compose-file /project/unittester/compose.yaml unittester
-#  - docker compose -f /project/unittester/compose.yaml up -d
+  
+  - printf "\n\nInstalling dependencies ...\n"
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Build docker containers and deploy them
-  # - git clone https://github.com/sztoor/model_serving.git
-  # - docker compose -f /model_serving/single_server_with_docker/production_server/docker-compose.yml up -d 
-
-  # - pip3 install flask
-  # - pip3 install future
-  # - pip3 install numpy
-  # - pip3 install celery
-  # - pip3 install amqp
   
