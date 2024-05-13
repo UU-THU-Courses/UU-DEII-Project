@@ -40,12 +40,16 @@ runcmd:
   - docker service create --name registry --publish published=5000,target=5000 registry:2
   
   - printf "\n\nCloning core repository ...\n"
-  - git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git project
-  
-  - printf "\n\nPushing images to registery ...\n"
-  - docker compose -f /project/unittester/composev1.yaml pull
-  - docker compose -f /project/unittester/composev1.yaml build
-  - docker compose -f /project/unittester/composev1.yaml push
+  - git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git /project
+
+  - printf "\n\nCopying common files to all services ...\n"
+  - cp /project/unittester/taskqueue/* /project/unittester/controller/ 
+  - cp /project/unittester/taskqueue/producer.py /project/unittester/webcrawler/ 
+
+  # - printf "\n\nPushing images to registery ...\n"
+  # - docker compose -f /project/unittester/composev1.yaml pull
+  # - docker compose -f /project/unittester/composev1.yaml build
+  # - docker compose -f /project/unittester/composev1.yaml push
   
   - printf "\n\nDeploy the application stack on swarm ...\n"
-  - docker stack deploy --compose-file /project/unittester/compose.yaml unittester
+  - docker stack deploy --compose-file /project/unittester/composev2.yaml unittester
