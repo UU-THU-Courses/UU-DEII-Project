@@ -21,14 +21,15 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
     for i in range(num_nodes):
         # Create the headnode and obtain ip address
         ip_addresses += [create_instance(name=f"{name_prefix}-worker-{i+1}", configs=configs)]
-    
+        print(f"Worker-{i+1} deployed at {ip_addresses[-1]} ...")
+
     # Wait until the swarm token file 
     # is not available at head node
     for addr in ip_addresses:
         status_code = -1
+        print(f"\nTrying to send request to worker node at {addr}...")
         while status_code != 200:
             try:
-                print(f"Trying to send request to worker node at {addr}...")
                 r = requests.post(f"http://{head_ip}:5200/send-token", data={"head_ip": head_ip, "worker_ip": addr}, timeout=5)
                 status_code = r.status_code
             except:
@@ -67,10 +68,11 @@ def full_deployment(config_file = "configs/deploy-cfg.yaml"):
     # rest all will be handled by headnode
     print("Deploying head node ... ")
     head_ip = deploy_headnode(name_prefix=f"UZ-{identifier}", configs = configs["instances"]["headnode"])
-
+    print(f"Head node deployed at {head_ip} ...")
+    
     # Obtain the swarm token
     # docker swarm join-token manager -q
-    print("Deploying worker nodes ... ")
+    print("\nDeploying worker nodes ... ")
     worker_ips = launch_workernodes(name_prefix=f"UZ-{identifier}", num_nodes=configs["instances"]["workernodes"]["numworkers"], head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"])
 
 

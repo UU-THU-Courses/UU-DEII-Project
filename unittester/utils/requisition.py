@@ -92,7 +92,7 @@ def create_instance(name, configs, debug = False):
     if debug: print (f"Instance: {instance.name} is in {instance_status}  state with ip address: {instance_ip}")
 
     # Return the newly created instances
-    return 
+    return instance_ip
 
 def get_ip_address(instance, private_net):
     # Check ip address of the instance
