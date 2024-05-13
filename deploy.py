@@ -28,12 +28,14 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
         status_code = -1
         while status_code != 200:
             try:
-                r = requests.post(f"http://{head_ip}:5200/send-token", data={"head_ip": f"{head_ip}", "worker_ip": f"{addr}"})
+                print(f"Trying to send request to worker node at {addr}...")
+                r = requests.post(f"http://{head_ip}:5200/send-token", data={"head_ip": head_ip, "worker_ip": addr}, timeout=5)
                 status_code = r.status_code
             except:
                 status_code = -1
             
-            time.sleep(60)
+            print("Post link not available sleeping for 120 seconds ...")
+            time.sleep(120)
 
     # Retrun worker ip addresses
     return ip_addresses
@@ -43,6 +45,7 @@ def del_workernode(node_ip):
 
 def add_workernode(num_nodes, head_ip, config_file="configs/deploy-cfg.yaml"):
     # Open the configurations file
+    print("Parsing provided configurations file... ")
     configs = parse_configs(config_path=config_file)
 
     # Produce a random identifier
@@ -54,6 +57,7 @@ def add_workernode(num_nodes, head_ip, config_file="configs/deploy-cfg.yaml"):
 
 def full_deployment(config_file = "configs/deploy-cfg.yaml"):
     # Open the configurations file
+    print("Parsing provided configurations file... ")
     configs = parse_configs(config_path=config_file)
 
     # Produce a random identifier
@@ -61,10 +65,12 @@ def full_deployment(config_file = "configs/deploy-cfg.yaml"):
 
     # Perform deployment of headnode
     # rest all will be handled by headnode
+    print("Deploying head node ... ")
     head_ip = deploy_headnode(name_prefix=f"UZ-{identifier}", configs = configs["instances"]["headnode"])
 
     # Obtain the swarm token
     # docker swarm join-token manager -q
+    print("Deploying worker nodes ... ")
     worker_ips = launch_workernodes(name_prefix=f"UZ-{identifier}", num_nodes=configs["instances"]["workernodes"]["numworkers"], head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"])
 
 
