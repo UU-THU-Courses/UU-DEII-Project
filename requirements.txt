@@ -1,2 +1,2 @@
 pyopenssl==24.1.0
-fire
+fire==0.6.0

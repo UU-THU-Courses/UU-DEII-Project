@@ -6,14 +6,6 @@ from unittester.utils.configs import parse_configs
 
 MAX_ATTEMPTS = 10
 
-# def send_files(username, ip_addr, ssh_secretkey_path, n_attempts = 0):
-#     try:
-#         subprocess.run([
-#             "scp", "-q", "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null", "-i", ssh_secretkey_path, "-r", "configs", f"{username}@{ip_addr}:/home/{username}/"], check=True)
-#     except:
-#         time.sleep(120)
-#         if n_attempts < MAX_ATTEMPTS: send_files(ip_addr, n_attempts+1)
-
 def deploy_headnode(configs = None):
     """A module to create the headnode and send config files."""
     
