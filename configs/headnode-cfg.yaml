@@ -20,32 +20,34 @@ packages:
   - ca-certificates 
   - curl 
   - software-properties-common
-  - pip3 install flask
+#  - pip3 install flask
 #  - rabbitmq-server
 
 byobu_default: system
 
 runcmd:
-  - printf "\n\nAdding docker repository ..."
+  - printf "\n\nAdding docker repository ...\n"
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
   - apt-get update -y
 
-  - printf "\n\nInstalling dependencies ..."
+  - printf "\n\nInstalling dependencies ...\n"
   - apt-get install -y docker-ce
-  - pip3 install pika
+  - pip3 install flask pika
 
-  - printf "\n\nInitializing docker swarm ..."
+  - printf "\n\nInitializing docker swarm ...\n"
   - docker swarm init > swarm_out.text
 
-  - printf "\n\nStarting a local registry ..."  
+  - printf "\n\nStarting a local registry ...\n"  
   - docker service create --name registry --publish published=5000,target=5000 registry:2
 
-  - printf "\n\nCloning core repository ..."
+  - printf "\n\nCloning core repository ...\n"
   - git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git project
 
-  - printf "\n\nPushing images to registery ..."
+  - printf "\n\nPushing images to registery ...\n"
+  - docker compose -f /project/unittester/compose.yaml pull
+  - docker compose -f /project/unittester/compose.yaml build
   - docker compose -f /project/unittester/compose.yaml push
 
-  - printf "\n\nDeploy the application stack on swarm ..."
+  - printf "\n\nDeploy the application stack on swarm ...\n"
   - docker stack deploy --compose-file /project/unittester/compose.yaml unittester
