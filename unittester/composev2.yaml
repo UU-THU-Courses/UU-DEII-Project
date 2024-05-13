@@ -18,9 +18,9 @@ services:
       placement:
         constraints:
           - "node.role==manager"
-  web:
-    image: 127.0.0.1:5000/webapp
-    build: ./webapp
+  webui:
+    image: 127.0.0.1:5000/webui
+    build: ./webui
     ports:
       - "5100:5100"
     networks:
@@ -48,9 +48,9 @@ services:
       placement:
         constraints:
           - "node.role==manager"
-  controller:
-    image: 127.0.0.1:5000/controller
-    build: ./controller
+  taskscheduler:
+    image: 127.0.0.1:5000/taskscheduler
+    build: ./taskscheduler
     networks:
       - backend
     depends_on:

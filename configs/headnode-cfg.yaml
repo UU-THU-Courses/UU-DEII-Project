@@ -31,22 +31,28 @@ runcmd:
   - chmod a+r /etc/apt/keyrings/docker.asc
   - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   - apt-get update -y
-  
+
   - printf "\n"
   - printf "\n---------------------------------\n"
   - printf "\n\nInstalling dependencies ...\n"
   - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - pip3 install Flask requests
   
   - printf "\n"
   - printf "\n---------------------------------\n"
   - printf "\n\nInitializing docker swarm ...\n"
-  - docker swarm init > swarm_out.txt
-  
+  - docker swarm init > /dev/null
+
+  - printf "\n"
+  - printf "\n---------------------------------\n"
+  - printf "\n\nObtain swarm token ...\n"
+  - docker swarm join-token worker -q > /swarm-token.txt
+
   - printf "\n"
   - printf "\n---------------------------------\n"
   - printf "\n\nStarting a local registry ...\n"  
   - docker service create --name registry --publish published=5000,target=5000 registry:2
-  
+
   - printf "\n"
   - printf "\n---------------------------------\n"
   - printf "\n\nCloning core repository ...\n"
@@ -54,8 +60,16 @@ runcmd:
 
   - printf "\n"
   - printf "\n---------------------------------\n"
+  - printf "Start control application ...\n"
+  - tmux new-session -d -s controlapp
+  - tmux send-keys -t controlapp "python3 /project/unittester/controlapp/miniapp.py --host=0.0.0.0 --port=5200 --debug --manager" C-m
+  - tmux detach -s controlapp
+#  - docker build -t controlapp /project/unittester/controlapp/ && docker run -p 5200:5200 -it controlapp "./miniapp.py --host=0.0.0.0 --port=5200 --debug --manager"
+
+  - printf "\n"
+  - printf "\n---------------------------------\n"
   - printf "\n\nCopying common files to all services ...\n"
-  - cp /project/unittester/taskqueue/* /project/unittester/controller/ 
+  - cp /project/unittester/taskqueue/* /project/unittester/taskscheduler/ 
   - cp /project/unittester/taskqueue/producer.py /project/unittester/webcrawler/ 
 
   - printf "\n"
@@ -64,7 +78,7 @@ runcmd:
   - docker compose -f /project/unittester/composev2.yaml pull
   - docker compose -f /project/unittester/composev2.yaml build
   - docker compose -f /project/unittester/composev2.yaml push
-  
+
   - printf "\n"
   - printf "\n---------------------------------\n"
   - printf "\n\nDeploy the application stack on swarm ...\n"

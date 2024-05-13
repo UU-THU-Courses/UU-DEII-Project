@@ -36,4 +36,19 @@ runcmd:
   - printf "\n---------------------------------\n"
   - printf "\n\nInstalling dependencies ...\n"
   - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - pip3 install Flask requests
 
+  - printf "\n"
+  - printf "\n---------------------------------\n"
+  - printf "\n\nCloning core repository ...\n"
+  - git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git /project
+
+  - printf "\n"
+  - printf "\n---------------------------------\n"
+  - printf "Start control application ...\n"
+  - tmux new-session -d -s controlapp
+  - tmux send-keys -t controlapp "python3 /project/unittester/controlapp/miniapp.py --host=0.0.0.0 --port=5200 --debug" C-m
+  - tmux detach -s controlapp
+
+
+#  - docker build -t controlapp /project/unittester/controlapp/ && docker run -p 5200:5200 -it controlapp "./miniapp.py --host=0.0.0.0 --port=5200 --debug"
