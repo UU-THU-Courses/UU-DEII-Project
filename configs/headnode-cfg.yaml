@@ -24,32 +24,48 @@ packages:
 byobu_default: system
 
 runcmd:
+  - printf "\n"
+  - printf "\n---------------------------------\n"
   - printf "\n\nAdding docker repository ...\n"
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
   - chmod a+r /etc/apt/keyrings/docker.asc
   - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
   - apt-get update -y
   
+  - printf "\n"
+  - printf "\n---------------------------------\n"
   - printf "\n\nInstalling dependencies ...\n"
   - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
   
+  - printf "\n"
+  - printf "\n---------------------------------\n"
   - printf "\n\nInitializing docker swarm ...\n"
   - docker swarm init > swarm_out.txt
   
+  - printf "\n"
+  - printf "\n---------------------------------\n"
   - printf "\n\nStarting a local registry ...\n"  
   - docker service create --name registry --publish published=5000,target=5000 registry:2
   
+  - printf "\n"
+  - printf "\n---------------------------------\n"
   - printf "\n\nCloning core repository ...\n"
   - git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git /project
 
+  - printf "\n"
+  - printf "\n---------------------------------\n"
   - printf "\n\nCopying common files to all services ...\n"
   - cp /project/unittester/taskqueue/* /project/unittester/controller/ 
   - cp /project/unittester/taskqueue/producer.py /project/unittester/webcrawler/ 
 
-  # - printf "\n\nPushing images to registery ...\n"
-  # - docker compose -f /project/unittester/composev1.yaml pull
-  # - docker compose -f /project/unittester/composev1.yaml build
-  # - docker compose -f /project/unittester/composev1.yaml push
+  - printf "\n"
+  - printf "\n---------------------------------\n"
+  - printf "Pushing images to registery ...\n"
+  - docker compose -f /project/unittester/composev2.yaml pull
+  - docker compose -f /project/unittester/composev2.yaml build
+  - docker compose -f /project/unittester/composev2.yaml push
   
+  - printf "\n"
+  - printf "\n---------------------------------\n"
   - printf "\n\nDeploy the application stack on swarm ...\n"
   - docker stack deploy --compose-file /project/unittester/composev2.yaml unittester

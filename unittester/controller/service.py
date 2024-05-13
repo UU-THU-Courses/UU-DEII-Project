@@ -1,4 +1,5 @@
 # import docker
+import time
 from consumer import Consumer
 from producer import Producer
 
@@ -13,6 +14,7 @@ producer = Producer()
 
 def callback_func(ch, method, properties, body):
     received_msg = body.decode()
+    print(received_msg)
     received_msg += "-append-from-consumer"
     producer.publish(message=received_msg, queue=PROD_QUEUE)
 
@@ -22,3 +24,5 @@ if __name__=="__main__":
 
     # Start Consuming the queue
     consumer.consume(callback=callback_func, queue=CONS_QUEUE)
+    
+    time.sleep(600)

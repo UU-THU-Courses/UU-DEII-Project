@@ -1,4 +1,4 @@
-import time, csv, requests
+import time
 from producer import Producer
 
 PROD_QUEUE = "task_queue"
@@ -15,8 +15,11 @@ def crawl_github():
     prod = Producer()
     prod.declare_queue(queue=PROD_QUEUE)
 
-    for gitpath in TEMP_PATHS:
-        prod.publish(message=gitpath, queue=PROD_QUEUE)
+    for i in range(10000):
+        for gitpath in TEMP_PATHS:
+            prod.publish(message=gitpath, queue=PROD_QUEUE)
+
+    time.sleep(600)
 
 if __name__ == "__main__":
     crawl_github()
