@@ -162,3 +162,4 @@ cython_debug/
 # Temporary files
 __temp__/
 uppmax-openrc.sh
+UPPMAX 2024_1-4-openrc.sh
