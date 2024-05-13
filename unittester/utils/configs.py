@@ -17,7 +17,9 @@ def write_configs(config_path, configs):
         yaml.dump(configs, stream, default_flow_style=False)
 
 if __name__ == "__main__":
-    config = parse_configs("configs/cloud-cfg.yaml")
-    write_configs("__temp/out_configs.yaml", config)
+    config = parse_configs("configs/headnode-cfg.yaml")
+    print(config["users"])
+    write_configs("__temp__/out_configs.yaml", config)
+    print("\n\n\n")
     config = parse_configs("configs/deploy-cfg.yaml")
     print(config)

@@ -4,48 +4,42 @@ apt_update: true
 apt_upgrade: true
 
 users:
- - name: ubuntu
-   sudo: ALL=(ALL) NOPASSWD:ALL
-   home: /home/ubuntu
-   shell: /bin/bash
-   ssh_authorized_keys:
-   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaqzR4jvxDRvlEmrDSQmtGv8XAPe9GQt6X6k1waRTk5hya4XHn7QljBovhmL9YkuhJbkLsgIc7DKHrfZ+kGb+Q06d2gCnYsEn1VVlJDqISBtmbU0Takv6HlZHYBPdGerTtvlqxVXUt3VXMIs2GPK3PNPNgDg6MpaEdfFQZKNEWzutwlRlXFOMlJH9NGCm1a3fqgsOtOWeFMr1G1L2JDMsvJmeUJXeZy40PxzIyxzsxlkFUVdo83ZTpuDhqm4jULflc1QIYNhxT6YmUAueeJzwcJTKgCyMNMUsU72iWaVCS0kGBGjgKwmZy4sT9ueU0qOH3TnALPuyukrsyRLt5Wje+pQnoXE7rb42H1nn4vbO/js8cPF38mzSliAIjhD7CxGu1D6riU3qZ24YcQWIqhyYo24NmqEKHezVkJNbRZdLD1z7a0wqcj3SX8LYzl2BJaKwN1qNnUjurl0EskPOHqgCJvHDGOzAeQylb+QDGo4p6ra/zKHSIz+Jw7RAJqyy9vU8= ubuntu@usama-cl3-clientvm
+- name: ubuntu
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  home: /home/ubuntu
+  shell: /bin/bash
+  ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaqzR4jvxDRvlEmrDSQmtGv8XAPe9GQt6X6k1waRTk5hya4XHn7QljBovhmL9YkuhJbkLsgIc7DKHrfZ+kGb+Q06d2gCnYsEn1VVlJDqISBtmbU0Takv6HlZHYBPdGerTtvlqxVXUt3VXMIs2GPK3PNPNgDg6MpaEdfFQZKNEWzutwlRlXFOMlJH9NGCm1a3fqgsOtOWeFMr1G1L2JDMsvJmeUJXeZy40PxzIyxzsxlkFUVdo83ZTpuDhqm4jULflc1QIYNhxT6YmUAueeJzwcJTKgCyMNMUsU72iWaVCS0kGBGjgKwmZy4sT9ueU0qOH3TnALPuyukrsyRLt5Wje+pQnoXE7rb42H1nn4vbO/js8cPF38mzSliAIjhD7CxGu1D6riU3qZ24YcQWIqhyYo24NmqEKHezVkJNbRZdLD1z7a0wqcj3SX8LYzl2BJaKwN1qNnUjurl0EskPOHqgCJvHDGOzAeQylb+QDGo4p6ra/zKHSIz+Jw7RAJqyy9vU8= ubuntu@usama-cl3-clientvm
 
 packages:
-  - python3-pip
-  - python3-dev
-  - build-essential
-  - tmux
-  - apt-transport-https 
-  - ca-certificates 
-  - curl 
-  - software-properties-common
+- python3-pip
+- python3-dev
+- build-essential
+- tmux
+- apt-transport-https 
+- ca-certificates 
+- curl 
+- software-properties-common
 
 byobu_default: system
 
 runcmd:
-  - printf "\n\nAdding docker repository ...\n"
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-  - chmod a+r /etc/apt/keyrings/docker.asc
-  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-  - apt-get update -y
-
-  - printf "\n\nInstalling dependencies ...\n"
-  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-  - printf "\n\nInitializing docker swarm ...\n"
-  - docker swarm init > swarm_out.txt
-
-  - printf "\n\nStarting a local registry ...\n"  
-  - docker service create --name registry --publish published=5000,target=5000 registry:2
-
-  - printf "\n\nCloning core repository ...\n"
-  - git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git project
-
-  - printf "\n\nPushing images to registery ...\n"
-  - docker compose -f /project/unittester/compose.yaml pull
-  - docker compose -f /project/unittester/compose.yaml build
-  - docker compose -f /project/unittester/compose.yaml push
-
-  - printf "\n\nDeploy the application stack on swarm ...\n"
-  - docker stack deploy --compose-file /project/unittester/compose.yaml unittester
+- printf "\n\nAdding docker repository ...\n"
+- curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+- chmod a+r /etc/apt/keyrings/docker.asc
+- echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+- apt-get update -y
+- printf "\n\nInstalling dependencies ...\n"
+- apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+- printf "\n\nInitializing docker swarm ...\n"
+- docker swarm init > swarm_out.txt
+- printf "\n\nStarting a local registry ...\n"  
+- docker service create --name registry --publish published=5000,target=5000 registry:2
+- printf "\n\nCloning core repository ...\n"
+- git clone https://github.com/UniversityCourseWork/UU-DEII-Project.git project
+- printf "\n\nPushing images to registery ...\n"
+- docker compose -f /project/unittester/compose.yaml pull
+- docker compose -f /project/unittester/compose.yaml build
+- docker compose -f /project/unittester/compose.yaml push
+- printf "\n\nDeploy the application stack on swarm ...\n"
+- docker stack deploy --compose-file /project/unittester/compose.yaml unittester
