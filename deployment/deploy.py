@@ -29,7 +29,7 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
         "content": head_ip,
         "owner": "root:root",
         "path": "/HEAD-IP.txt",
-        "permissions": b"0644",
+        "permissions": "0644",
     }]
     os.makedirs("__temp_dir__", exist_ok=True)
     write_configs(configs["instance_configs"], cloud_cfg)

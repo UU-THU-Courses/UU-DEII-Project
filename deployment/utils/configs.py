@@ -4,17 +4,17 @@ import yaml
 
 def parse_configs(config_path) -> dict:
     """Load and return user configurations."""
-    with open(config_path, "r") as stream:
+    with open(config_path, "r") as fstream:
         try:
-            config = yaml.safe_load(stream)
+            config = yaml.safe_load(fstream)
             return config
         except yaml.YAMLError as exc:
             print(exc)
 
 def write_configs(config_path, configs):
     """Write user configs to a path."""
-    with open(config_path, "w") as stream:
-        yaml.dump(configs, stream, default_flow_style=False)
+    with open(config_path, "w") as fstream:
+        yaml.safe_dump(configs, fstream, default_flow_style=False, width=8096)
 
 if __name__ == "__main__":
     config = parse_configs("configs/headnode-cfg.yaml")
