@@ -1,24 +1,4 @@
 services:
-  rabbit:
-    hostname: rabbit
-    image: rabbitmq:3-management
-    environment:
-      - RABBITMQ_DEFAULT_USER=rabbitmq
-      - RABBITMQ_DEFAULT_PASS=rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    networks:
-      - frontend
-      - backend
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - "node.role==manager"
-
   pulsar:
     hostname: pulsar
     image: apachepulsar/pulsar:3.2.1
@@ -32,23 +12,6 @@ services:
       - pulsardata:/pulsar/data
       - pulsarconf:/pulsar/conf
     command: bin/pulsar standalone
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - "node.role==manager"
-
-  webui:
-    image: 127.0.0.1:5000/webui
-    build: ./webui
-    ports:
-      - "5100:5100"
-    networks:
-      - frontend
-    depends_on:
-      - rabbit
     deploy:
       replicas: 1
       restart_policy:
@@ -78,7 +41,7 @@ services:
     depends_on:
       - rabbit
     deploy:
-      replicas: 5
+      replicas: 1
 
 networks:
   frontend:
