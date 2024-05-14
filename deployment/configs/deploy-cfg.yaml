@@ -19,7 +19,7 @@ instances:
     floating_ip_addr: null
     instance_configs: configs/headnode-cfg.yaml
   workernodes:
-    numworkers: 1
+    numworkers: 2
     workercfgs:
       instance_flavor: ssc.medium
       instance_source: Ubuntu 22.04 - 2024.01.15
