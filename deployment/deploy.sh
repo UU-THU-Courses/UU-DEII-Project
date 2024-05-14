@@ -9,6 +9,9 @@ then
     exit "$?";
 fi
 
+config_file="configs/deploy-cfg.yaml"
+[ ! -z "$1" ] && config_file="$1"
+
 # Perform updates and upgrade
 apt update; apt -y upgrade
 
@@ -25,8 +28,11 @@ apt -y install nova-compute
 # Install API related packages
 apt -y install python3-openstackclient python3-novaclient python3-keystoneclient
 
-# Install Ray Cluster
+# Install dependencies
 python3 -m pip install -r requirements.txt
 
 # Perform updates and upgrade
 apt update; apt -y upgrade
+
+# Start deployment
+python3 deploy.py --full --config_file=${config_file}

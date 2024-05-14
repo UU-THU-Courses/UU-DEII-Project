@@ -1,9 +1,10 @@
+import os
 import fire
+import random
 import requests, time
-import random, subprocess, argparse
 
-from unittester.utils.requisition import create_instance
-from unittester.utils.configs import parse_configs
+from utils.requisition import create_instance
+from utils.configs import parse_configs, write_configs
 
 MAX_ATTEMPTS = 10
 
@@ -16,30 +17,29 @@ def deploy_headnode(name_prefix, configs):
     return ip_addr
 
 def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
+    # Update cloud configurations in order to write
+    # the head ip address to a temporary file at
+    # worker node
+    
+    cloud_cfg = parse_configs(config_path=configs["instance_configs"])
+    configs["instance_configs"] = "__temp_dir__/temp_cloud_cfg.yaml"
+
+    cloud_cfg["write_files"] = [{
+        "encoding": "b64",
+        "content": head_ip,
+        "owner": "root:root",
+        "path": "/HEAD-IP.txt",
+        "permissions": b"0644",
+    }]
+    os.makedirs("__temp_dir__", exist_ok=True)
+    write_configs(configs["instance_configs"], cloud_cfg)
+
     # Deploy all nodes
     ip_addresses = []
     for i in range(num_nodes):
         # Create the headnode and obtain ip address
         ip_addresses += [create_instance(name=f"{name_prefix}-worker-{i+1}", configs=configs)]
         print(f"Worker-{i+1} deployed at {ip_addresses[-1]} ...")
-
-    # Wait until the swarm token file 
-    # is not available at head node
-    for addr in ip_addresses:
-        status_code = -1
-        print(f"\nTrying to send request to worker node at {addr}...")
-        while status_code != 200:
-            try:
-                r = requests.post(f"http://{head_ip}:5200/send-token", data={"head_ip": head_ip, "worker_ip": addr}, timeout=5)
-                status_code = r.status_code
-                print(f"Got status code: {status_code} ...")
-            except:
-                print("Exception was thrown ...")
-                status_code = -1
-            
-            if status_code != 200
-                print("Post link not available sleeping for 120 seconds ...")
-                time.sleep(120)
 
     # Retrun worker ip addresses
     return ip_addresses
