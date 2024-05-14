@@ -23,14 +23,6 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
     
     cloud_cfg = parse_configs(config_path=configs["instance_configs"])
     configs["instance_configs"] = "__temp_dir__/temp_cloud_cfg.yaml"
-
-    # cloud_cfg["write_files"] = [{
-    #     "encoding": "b64",
-    #     "content": head_ip,
-    #     "owner": "root:root",
-    #     "path": "/HEAD-IP.txt",
-    #     "permissions": "0644",
-    # }]
     cloud_cfg["write_files"] = [{
         "content": f"{head_ip}",
         "path": "/HEAD-IP.txt",
@@ -69,6 +61,7 @@ def add_workernode(num_nodes, head_ip, config_file="configs/deploy-cfg.yaml"):
 
     # Obtain the swarm token
     # docker swarm join-token manager -q
+    print("\nDeploying worker nodes ... ")
     worker_ips = launch_workernodes(name_prefix=f"UZ-{identifier}", num_nodes=num_nodes, head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"])
 
 def full_deployment(config_file = "configs/deploy-cfg.yaml"):
