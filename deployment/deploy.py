@@ -1,11 +1,10 @@
 import os
 import fire
 import random
-import subprocess
 
 from utils.requisition import create_instance
 from utils.configs import parse_configs, write_configs
-#from utils.keygen import generate_keypair
+from utils.keygen import generate_keypair
 
 MAX_ATTEMPTS = 10
 
@@ -97,12 +96,7 @@ def full_deployment(config_file = "configs/deploy-cfg.yaml"):
     identifier = random.randint(1000,9999)
 
     # Generate a new private/public keypair
-    os.makedirs("temp_keypairs", exist_ok=True)
-    # generate_keypair(keypath="temp_keypairs")
-    run_cmd = f'ssh-keygen -q -t rsa -N "" -f temp_keypairs/id_rsa'
-    subprocess.call(run_cmd, shell = True)
-    with open("temp_keypairs/id_rsa.pub", "r") as keyfile:
-        ssh_key = keyfile.read().strip()
+    ssh_key = generate_keypair(keypath="temp_keypairs")
 
     # Perform deployment of headnode
     # rest all will be handled by headnode
