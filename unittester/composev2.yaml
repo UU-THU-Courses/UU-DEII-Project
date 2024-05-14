@@ -77,11 +77,6 @@ services:
       - rabbit
     deploy:
       replicas: 15
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-          - "node.role==manager"
 
 networks:
   frontend:
