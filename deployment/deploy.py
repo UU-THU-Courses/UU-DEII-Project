@@ -34,6 +34,13 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
     os.makedirs("__temp_dir__", exist_ok=True)
     write_configs(configs["instance_configs"], cloud_cfg)
 
+    # Prepend the head comment: #cloud-config 
+    # to newly created yaml file
+    with open(configs["instance_configs"], "r+") as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write("#cloud-config" + "\n\n" + content)
+
     # Deploy all nodes
     ip_addresses = []
     for i in range(num_nodes):
