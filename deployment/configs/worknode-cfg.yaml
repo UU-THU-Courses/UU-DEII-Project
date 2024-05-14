@@ -53,12 +53,12 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "Installing dependencies for controller ...\n"
-  - pip3 install -r /project/unittester/controller/requirements.txt
+  - pip3 install -r /project/unittester/discovery/requirements.txt
 
   - printf "..."
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "Attempting to join the existing swarm ...\n"
-  - python3 /project/deployment/utils/services.py --join-swarm --worker_addr="" &
+  - python3 /project/deployment/utils/services.py --join-swarm --worker_addr="xxx.xxx.xxx.xxx" &
 
