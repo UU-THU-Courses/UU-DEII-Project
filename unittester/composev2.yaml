@@ -30,10 +30,9 @@ services:
       - backend
     volumes:
       - pulsardata:/pulsar/data
-      - pulsarconf:/pulsar/conf
     command: bin/pulsar standalone
     deploy:
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
       placement:
@@ -48,7 +47,7 @@ services:
     networks:
       - frontend
     depends_on:
-      - pulsar
+      - rabbit
     deploy:
       replicas: 1
       restart_policy:
@@ -63,7 +62,7 @@ services:
     networks:
       - frontend
     depends_on:
-      - pulsar
+      - rabbit
     deploy:
       replicas: 1
       placement:
@@ -76,7 +75,7 @@ services:
     networks:
       - backend
     depends_on:
-      - pulsar
+      - rabbit
     deploy:
       replicas: 5
 

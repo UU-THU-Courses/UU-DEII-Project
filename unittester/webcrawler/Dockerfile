@@ -3,4 +3,5 @@ WORKDIR /webcrawler/
 COPY . .
 RUN pip install -r requirements.txt
 ENTRYPOINT ["python3"]
-CMD ["crawler.py", "--pulsar"]
+CMD ["crawler.py"]
+#CMD ["crawler.py" , "--pulsar"]

@@ -35,7 +35,7 @@ class Consumer:
             # Process the message received from broker
             try:
                 # Run the callback message
-                if callback(msg):
+                if callback(msg.data().decode()):
                     # Acknowledge for receiving the message
                     self.consumer.acknowledge(msg)
                 else:
