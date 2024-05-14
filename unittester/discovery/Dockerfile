@@ -1,5 +1,5 @@
 FROM python:3.9-buster
-WORKDIR /controlapp/
+WORKDIR /discovery/
 COPY . .
 RUN pip install -r requirements.txt
 ENTRYPOINT ["python"]

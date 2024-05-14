@@ -4,7 +4,7 @@ import xml.etree.cElementTree as ET
 def process_reports(xmlpath):
     # Fetch all XML report files
     xml_files = glob.glob(f"{xmlpath}/*.xml")
-    
+
     # Process XML report files
     for xml_file in xml_files:
         tree = ET.parse(xml_file)

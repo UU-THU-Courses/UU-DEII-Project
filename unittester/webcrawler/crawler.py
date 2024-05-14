@@ -1,25 +1,50 @@
 import time
+import argparse
 from producer import Producer
+
 
 PROD_QUEUE = "task_queue"
 
 # Declare few paths
 TEMP_PATHS = [
-    "Test-1",
-    "Test-2",
-    "Test-3"
+    "https://github.com/ZHENFENG13/My-Blog.git",
+    "https://github.com/ZHENFENG13/My-Blog.git",
+    "https://github.com/ZHENFENG13/My-Blog.git"
 ]
 
-def crawl_github():
+def rabbit_crawler():
     # Create a producer instance
     prod = Producer()
     prod.declare_queue(queue=PROD_QUEUE)
 
-    for i in range(10000):
+    for i in range(100):
         for gitpath in TEMP_PATHS:
             prod.publish(message=gitpath, queue=PROD_QUEUE)
 
+    del prod
+    time.sleep(600)
+
+def pulsar_crawler():
+    prod = Producer(host="pulsar", port=6650, topic="gitrepos")
+    
+    for i in range(100):
+        for gitpath in TEMP_PATHS:
+            prod.publish(message=gitpath) 
+
+    del prod
     time.sleep(600)
 
 if __name__ == "__main__":
-    crawl_github()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--pulsar",
+        required=False,
+        action="store_true",
+        default=False,
+    )
+    args = parser.parse_args()
+    
+    if args.pulsar:
+        pulsar_crawler()
+    else:
+        rabbit_crawler()

@@ -76,7 +76,7 @@ services:
     depends_on:
       - rabbit
     deploy:
-      replicas: 1
+      replicas: 15
       restart_policy:
         condition: on-failure
       placement:

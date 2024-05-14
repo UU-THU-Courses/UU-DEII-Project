@@ -73,17 +73,17 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
-  - printf "Installing dependencies for controller ...\n"
-  - pip3 install -r /project/unittester/controller/requirements.txt
+  - printf "Installing dependencies for discovery ...\n"
+  - pip3 install -r /project/unittester/discovery/requirements.txt
 
   - printf "..."
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "Start control application ...\n"
-  - tmux new-session -d -s controlapp
-  - tmux send-keys -t controlapp "python3 /project/unittester/controller/controller.py --host=0.0.0.0 --port=5200 --debug" C-m
-  - tmux detach -s controlapp
+  - tmux new-session -d -s discoveryService
+  - tmux send-keys -t discoveryService "python3 /project/unittester/discovery/discovery.py --host=0.0.0.0 --port=5200 --debug" C-m
+  - tmux detach -s discoveryService
 
   - printf "..."
   - printf "\n=========================================================================================================\n"
