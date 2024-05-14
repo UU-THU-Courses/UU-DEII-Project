@@ -26,7 +26,7 @@ services:
     networks:
       - frontend
     depends_on:
-      - rabbit
+      - pulsar
     deploy:
       replicas: 1
       placement:
@@ -39,7 +39,7 @@ services:
     networks:
       - backend
     depends_on:
-      - rabbit
+      - pulsar
     deploy:
       replicas: 1
 
