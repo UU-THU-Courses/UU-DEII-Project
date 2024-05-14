@@ -90,8 +90,8 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n\nCopying common files to all services ...\n"
-  - cp /project/unittester/taskqueue/* /project/unittester/worker/ 
-  - cp /project/unittester/taskqueue/producer.py /project/unittester/webcrawler/ 
+  - cp /project/unittester/pulsar-client/* /project/unittester/worker/ 
+  - cp /project/unittester/pulsar-client/producer.py /project/unittester/webcrawler/ 
 
   - printf "..."
   - printf "\n=========================================================================================================\n"

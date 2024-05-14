@@ -35,10 +35,12 @@ class Consumer:
             # Process the message received from broker
             try:
                 # Run the callback message
-                callback(msg)
-
-                # Acknowledge for receiving the message
-                self.consumer.acknowledge(msg)
+                if callback(msg):
+                    # Acknowledge for receiving the message
+                    self.consumer.acknowledge(msg)
+                else:
+                    print("Sending negative ACK!", flush=True)
+                    self.consumer.negative_acknowledge(msg)
             except:
                 print("Sending negative ACK!", flush=True)
                 self.consumer.negative_acknowledge(msg)

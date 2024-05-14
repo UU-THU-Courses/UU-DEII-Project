@@ -2,8 +2,7 @@ import time
 import argparse
 from producer import Producer
 
-
-PROD_QUEUE = "task_queue"
+PROD_QUEUE = "gitrepos"
 
 # Declare few paths
 TEMP_PATHS = [
@@ -14,7 +13,7 @@ TEMP_PATHS = [
 
 def rabbit_crawler():
     # Create a producer instance
-    prod = Producer()
+    prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq")
     prod.declare_queue(queue=PROD_QUEUE)
 
     for i in range(100):
@@ -25,7 +24,7 @@ def rabbit_crawler():
     time.sleep(600)
 
 def pulsar_crawler():
-    prod = Producer(host="pulsar", port=6650, topic="gitrepos")
+    prod = Producer(host="pulsar", port=6650, topic=PROD_QUEUE)
     
     for i in range(100):
         for gitpath in TEMP_PATHS:

@@ -1,10 +1,10 @@
 # import docker
 import time
+import shutil
 import argparse
 import subprocess
 
 from consolidate import process_reports
-
 from consumer import Consumer
 from producer import Producer
 
@@ -12,7 +12,7 @@ CONS_QUEUE = "gitrepos"
 PROD_QUEUE = "outputs"
 
 def rabbit_callback_func(ch, method, properties, body):
-    global prod
+    global prod, repo_download_path
     # Build the command to call the script that
     # downloads git repo and runs maven tests
     received_msg = body.decode()
@@ -22,17 +22,22 @@ def rabbit_callback_func(ch, method, properties, body):
     # reports module in consolidate.py
     results_dict = process_reports("/testRepo/")    
     prod.publish(message=results_dict, queue=PROD_QUEUE)
+    # Perform clean up of temporary paths
+    shutil.rmtree(repo_download_path)
 
 def pulsar_callback_func(message):
-    global prod
+    global prod, repo_download_path
     # Build the command to call the script that
     # downloads git repo and runs maven tests
-    run_command = rf"bash unittest.sh {message} /testRepo"
+    run_command = rf"bash unittest.sh {message} {repo_download_path}"
     subprocess.call(run_command, shell=True)
     # Process the results using the process
     # reports module in consolidate.py
-    results_dict = process_reports("/testRepo/")
-    prod.publish(message=results_dict)
+    results_dict = process_reports("/testRepo/target/surefire-reports")
+    prod.publish(message=results_dict.__str__())
+    # Perform clean up of temporary paths
+    shutil.rmtree(repo_download_path)
+    return True
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
@@ -45,14 +50,16 @@ if __name__=="__main__":
     args = parser.parse_args()
     
     # Consumer messages
-    global cons, prod
+    global cons, prod, repo_download_path
+    repo_download_path = "/testRepo"
+    
     if args.pulsar:
         cons = Consumer(host="pulsar", port=6650, topic=CONS_QUEUE)
         prod = Producer(host="pulsar", port=6650, topic=PROD_QUEUE)
-        cons.consume(callback=pulsar_callback_func, topic=CONS_QUEUE)
+        cons.consume(callback=pulsar_callback_func)
     else:        
-        cons = Consumer()
-        prod = Producer()
+        cons = Consumer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq")
+        prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq")
         cons.declare_queue(CONS_QUEUE)
         prod.declare_queue(PROD_QUEUE)
         cons.consume(callback=rabbit_callback_func, queue=CONS_QUEUE)
