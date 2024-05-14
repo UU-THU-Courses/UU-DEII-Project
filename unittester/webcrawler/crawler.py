@@ -13,12 +13,11 @@ TEMP_PATHS = [
 
 def rabbit_crawler():
     # Create a producer instance
-    prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq")
-    prod.declare_queue(queue=PROD_QUEUE)
-
+    prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", exchange=PROD_QUEUE, exchange_type="topic", queue=None)
+    
     for i in range(100):
         for gitpath in TEMP_PATHS:
-            prod.publish(message=gitpath, queue=PROD_QUEUE)
+            prod.publish(message=gitpath, routing_key="")
 
     del prod
     time.sleep(600)

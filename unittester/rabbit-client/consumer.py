@@ -1,8 +1,9 @@
 import pika, time
 
 class Consumer:
-    def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq") -> None:
+    def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", exchange=None, exchange_type=None, queue=None) -> None:
         self.connection = None
+        self.channel = None
         while True:
             try: 
                 self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password)))
@@ -12,15 +13,26 @@ class Consumer:
                 # Sleep for 60 seconds, probably the Rabbit 
                 # service is not up yet.
                 time.sleep(60)
+        
+        # Declare requested exchange and
+        # queue
+        self.exchange = exchange
+        self.queue = queue
+        if self.exchange: self.channel.exchange_declare(exchange=exchange, exchange_type=exchange_type)
+        if self.queue == "":
+            result = self.channel.queue_declare(queue=self.queue, exclusive=True)
+            self.queue = result.method.queue
+        else:
+            self.channel.queue_declare(queue=self.queue, durable=True)
+        
+        # Bind exchange to the queue
+        self.channel.queue_bind(exchange=self.exchange, queue=self.queue)
 
-    def declare_queue(self, queue, durable=True):
-       self.channel.queue_declare(queue=queue, durable=durable)
-    
     def consume(self, callback, queue):
         self.channel.basic_consume(
-            queue=queue,
+            queue=self.queue,
+            on_message_callback=callback,
             auto_ack=True,
-            on_message_callback=callback
         )
         self.channel.start_consuming()
     

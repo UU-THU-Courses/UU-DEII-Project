@@ -58,9 +58,7 @@ if __name__=="__main__":
         prod = Producer(host="pulsar", port=6650, topic=PROD_QUEUE)
         cons.consume(callback=pulsar_callback_func)
     else:        
-        cons = Consumer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq")
-        prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq")
-        cons.declare_queue(CONS_QUEUE)
-        prod.declare_queue(PROD_QUEUE)
+        cons = Consumer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", exchange=CONS_QUEUE, exchange_type="topic", queue="")
+        prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", exchange=PROD_QUEUE, exchange_type="topic", queue=None)
         cons.consume(callback=rabbit_callback_func, queue=CONS_QUEUE)
 

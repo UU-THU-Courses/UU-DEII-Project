@@ -1,8 +1,9 @@
 import pika, time
 
 class Producer:
-    def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq") -> None:
+    def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", exchange=None, exchange_type=None, queue=None) -> None:
         self.connection = None
+        self.channel = None
         while True:
             try: 
                 self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password)))
@@ -12,14 +13,18 @@ class Producer:
                 # Sleep for 60 seconds, probably the Rabbit 
                 # service is not up yet.
                 time.sleep(60)
+        
+        # Declare requested exchange and
+        # queue
+        self.exchange = exchange
+        self.queue = queue
+        if self.exchange: self.channel.exchange_declare(exchange=exchange, exchange_type=exchange_type)
+        if self.queue: self.channel.queue_declare(queue=queue, durable=True)
 
-    def declare_queue(self, queue, durable=True):
-       self.channel.queue_declare(queue=queue, durable=durable)
-    
-    def publish(self, message, queue):
+    def publish(self, message, routing_key):
         self.channel.basic_publish(
-            exchange='',
-            routing_key=queue,
+            exchange=self.exchange,
+            routing_key=routing_key,
             body=message,
             properties=pika.BasicProperties(
                 delivery_mode=pika.DeliveryMode.Persistent
