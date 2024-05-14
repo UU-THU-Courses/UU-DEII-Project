@@ -28,8 +28,8 @@ services:
       - frontend
       - backend
     volumes:
-      - pulsardata: /pulsar/data
-      - pulsarconf: /pulsar/conf
+      - pulsardata:/pulsar/data
+      - pulsarconf:/pulsar/conf
     command: bin/pulsar standalone
     deploy:
       replicas: 1
