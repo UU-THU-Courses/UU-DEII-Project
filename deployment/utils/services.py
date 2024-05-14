@@ -27,7 +27,18 @@ def query_swarm_token(manager_addr, worker_addr):
     # Return the requested fields
     return response_dict["swarm-token"].strip(), response_dict["manager-port"]
 
-def join_swarm(manager_addr, worker_addr):
+def join_swarm(worker_addr):
+
+    # Attempt to read the manager address
+    # from HEAD-IP.txt file at root path
+    while True:
+        try:
+            with open("/HEAD-IP.txt", "r") as f:
+                manager_addr = f.read().strip()
+            break
+        except:
+            print("Waiting 120 seconds before attempting to read HEAD-IP.txt again ...")
+            time.sleep(120)
 
     # Query the controller application of 
     # manager node and get swarm token

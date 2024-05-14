@@ -60,4 +60,5 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "Attempting to join the existing swarm ...\n"
-  - python3 /project/deployment/utils/services.py --join-swarm --manager_addr="$(</HEAD-IP.txt)" --worker_addr=""
+  - python3 /project/deployment/utils/services.py --join-swarm --worker_addr="" &
+
