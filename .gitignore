@@ -160,6 +160,7 @@ cython_debug/
 #.idea/
 
 # Temporary files
+.vscode
 __temp__/
 uppmax-openrc.sh
 UPPMAX 2024_1-4-openrc.sh
