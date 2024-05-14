@@ -24,10 +24,15 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs):
     cloud_cfg = parse_configs(config_path=configs["instance_configs"])
     configs["instance_configs"] = "__temp_dir__/temp_cloud_cfg.yaml"
 
+    # cloud_cfg["write_files"] = [{
+    #     "encoding": "b64",
+    #     "content": head_ip,
+    #     "owner": "root:root",
+    #     "path": "/HEAD-IP.txt",
+    #     "permissions": "0644",
+    # }]
     cloud_cfg["write_files"] = [{
-        "encoding": "b64",
-        "content": head_ip,
-        "owner": "root:root",
+        "content": f"{head_ip}",
         "path": "/HEAD-IP.txt",
         "permissions": "0644",
     }]
