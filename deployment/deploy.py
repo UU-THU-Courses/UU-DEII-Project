@@ -14,9 +14,20 @@ def deploy_headnode(name_prefix, configs, ssh_key):
 
     cloud_cfg = parse_configs(config_path=configs["instance_configs"])
     configs["instance_configs"] = "__temp_dir__/temp_headnode_cfg.yaml"
-    cloud_cfg["users"]["ssh_authorized_keys"].append(ssh_key)
+    
+    # Append new key for all users
+    for user in cloud_cfg["users"]:
+        user["ssh_authorized_keys"].append(ssh_key)
+
     os.makedirs("__temp_dir__", exist_ok=True)
     write_configs(configs["instance_configs"], cloud_cfg)
+
+    # Prepend the head comment: #cloud-config 
+    # to newly created yaml file
+    with open(configs["instance_configs"], "r+") as f:
+        content = f.read()
+        f.seek(0, 0)
+        f.write("#cloud-config" + "\n\n" + content)
 
     # Create the headnode and obtain ip address
     ip_addr = create_instance(name=f"{name_prefix}-headnode", configs=configs)
@@ -30,7 +41,12 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs, ssh_key):
     
     cloud_cfg = parse_configs(config_path=configs["instance_configs"])
     configs["instance_configs"] = "__temp_dir__/temp_worknode_cfg.yaml"
-    cloud_cfg["users"]["ssh_authorized_keys"].append(ssh_key)
+    
+    # Append new key for all users
+    for user in cloud_cfg["users"]:
+        user["ssh_authorized_keys"].append(ssh_key)
+    
+    # Write head ip to a file
     cloud_cfg["write_files"] = [{
         "content": f"{head_ip}",
         "path": "/HEAD-IP.txt",
