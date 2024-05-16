@@ -31,8 +31,14 @@ def rabbit_callback_func(channel, method, properties, body):
             exception=results_dict["exception"]
         )
     else:
-        with open(f"{repo_download_path}/temp-console-output-file.txt", "r") as f:
-            console_log = f.read()
+        console_file = f"{repo_download_path}/temp-console-output-file.txt"
+        if os.isfile(console_file):
+            with open(console_file, "r") as f:
+                console_log = f.read()
+        else:
+            console_log = "No console file exists... Some error downloading git repository?"
+        
+        # Insert error to the errors table
         mongo_db.insert_errors(
             reponame=os.path.splitext(os.path.basename(received_msg))[0],
             repolink=received_msg,
