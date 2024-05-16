@@ -1,7 +1,7 @@
 import pika, time
 
 class Producer:
-    def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", exchange=None, exchange_type=None, queue=None) -> None:
+    def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", queue="gitrepos") -> None:
         self.connection = None
         self.channel = None
         while True:
@@ -10,21 +10,18 @@ class Producer:
                 self.channel = self.connection.channel()
                 break
             except:
-                # Sleep for 60 seconds, probably the Rabbit 
-                # service is not up yet.
+                # Sleep for 60 seconds, probably the 
+                # Rabbit service is not up yet.
                 time.sleep(60)
         
-        # Declare requested exchange and
-        # queue
-        self.exchange = exchange
+        # Declare a queue with specified queue name
         self.queue = queue
-        if self.exchange: self.channel.exchange_declare(exchange=exchange, exchange_type=exchange_type)
-        if self.queue: self.channel.queue_declare(queue=queue, durable=True)
+        self.channel.queue_declare(queue=queue, durable=True)
 
-    def publish(self, message, routing_key):
+    def publish(self, message):
         self.channel.basic_publish(
-            exchange=self.exchange,
-            routing_key=routing_key,
+            exchange="",
+            routing_key=self.queue,
             body=message,
             properties=pika.BasicProperties(
                 delivery_mode=pika.DeliveryMode.Persistent

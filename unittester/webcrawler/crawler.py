@@ -1,8 +1,5 @@
 import time
 import argparse
-from producer import Producer
-
-PROD_QUEUE = "gitrepos"
 
 # Declare few paths
 TEMP_PATHS = [
@@ -11,26 +8,27 @@ TEMP_PATHS = [
     "https://github.com/ZHENFENG13/My-Blog.git"
 ]
 
-def rabbit_crawler():
+def rabbit_crawler(producer_queue):
     # Create a producer instance
-    prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", exchange=PROD_QUEUE, exchange_type="topic", queue=None)
+    from rabbit_producer import Producer
+    prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", queue=producer_queue)
     
-    for i in range(100):
+    for i in range(10):
         for gitpath in TEMP_PATHS:
-            prod.publish(message=gitpath, routing_key="")
+            prod.publish(message=gitpath)
 
     del prod
-    time.sleep(600)
 
-def pulsar_crawler():
-    prod = Producer(host="pulsar", port=6650, topic=PROD_QUEUE)
+def pulsar_crawler(producer_queue):
+    # Create a producer instance
+    from pulsar_producer import Producer
+    prod = Producer(host="pulsar", port=6650, topic=producer_queue)
     
-    for i in range(100):
+    for i in range(10):
         for gitpath in TEMP_PATHS:
             prod.publish(message=gitpath) 
 
     del prod
-    time.sleep(600)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -40,9 +38,15 @@ if __name__ == "__main__":
         action="store_true",
         default=False,
     )
+    parser.add_argument(
+        "--target-queue",
+        type=str,
+        required=False,
+        default="gitrepos",
+    )
     args = parser.parse_args()
     
     if args.pulsar:
-        pulsar_crawler()
+        pulsar_crawler(args.target_queue)
     else:
-        rabbit_crawler()
+        rabbit_crawler(args.target_queue)

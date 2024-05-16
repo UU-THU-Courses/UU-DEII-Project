@@ -10,10 +10,11 @@ OUT_PATH="/testRepo"
 git clone ${GIT_REPO} ${OUT_PATH}
 
 # Change directory
+current=$(pwd)
 cd ${OUT_PATH}
 
 # Run maven tests
 mvn test
 
-# Check outputs
-# python3 /worker/process.py --path="target/surefire-reports"
+# Change directory back
+cd ${current}

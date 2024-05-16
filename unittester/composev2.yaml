@@ -15,9 +15,6 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      placement:
-        constraints:
-          - "node.role==manager"
 
   pulsar:
     hostname: pulsar
@@ -35,6 +32,47 @@ services:
       replicas: 0
       restart_policy:
         condition: on-failure
+
+  mongo:
+    hostname: mongo
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_DATABASE=test
+      - MONGO_INITDB_ROOT_USERNAME=custom_admin
+      - MONGO_INITDB_ROOT_PASSWORD=custom_passw
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    depends_on:
+      - mongo
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=custom_admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=custom_passw
+      - ME_CONFIG_BASICAUTH_USERNAME=custom_admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=custom_passw
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "8081:8081"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
       placement:
         constraints:
           - "node.role==manager"
@@ -47,7 +85,7 @@ services:
     networks:
       - frontend
     depends_on:
-      - rabbit
+      - mongo
     deploy:
       replicas: 1
       restart_policy:
@@ -65,9 +103,8 @@ services:
       - rabbit
     deploy:
       replicas: 1
-      placement:
-        constraints:
-          - "node.role==manager"
+      restart_policy:
+        condition: none
 
   worker:
     image: 127.0.0.1:5000/worker
@@ -76,8 +113,13 @@ services:
       - backend
     depends_on:
       - rabbit
+      - mongo
     deploy:
-      replicas: 5
+      replicas: 10
+      restart_policy:
+        condition: on-failure
+      placement:
+        max_replicas_per_node: 5
 
 networks:
   frontend:
@@ -85,4 +127,4 @@ networks:
 
 volumes:
   pulsardata:
-  pulsarconf:
+  mongodata:

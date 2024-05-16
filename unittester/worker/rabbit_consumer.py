@@ -1,7 +1,7 @@
 import pika, time
 
 class Consumer:
-    def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", exchange=None, exchange_type=None, queue=None) -> None:
+    def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", queue="gitrepos") -> None:
         self.connection = None
         self.channel = None
         while True:
@@ -14,25 +14,15 @@ class Consumer:
                 # service is not up yet.
                 time.sleep(60)
         
-        # Declare requested exchange and
-        # queue
-        self.exchange = exchange
+        # Declare a queue with specified queue name
         self.queue = queue
-        if self.exchange: self.channel.exchange_declare(exchange=exchange, exchange_type=exchange_type)
-        if self.queue == "":
-            result = self.channel.queue_declare(queue=self.queue, exclusive=True)
-            self.queue = result.method.queue
-        else:
-            self.channel.queue_declare(queue=self.queue, durable=True)
-        
-        # Bind exchange to the queue
-        self.channel.queue_bind(exchange=self.exchange, queue=self.queue)
+        self.channel.queue_declare(queue=self.queue, durable=True)
+        self.channel.basic_qos(prefetch_count=1)
 
-    def consume(self, callback, queue):
+    def consume(self, callback):
         self.channel.basic_consume(
             queue=self.queue,
-            on_message_callback=callback,
-            auto_ack=True,
+            on_message_callback=callback
         )
         self.channel.start_consuming()
     
