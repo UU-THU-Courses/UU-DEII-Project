@@ -8,7 +8,7 @@ class CustomMongoDB:
         self.client = MongoClient(self.CONNECTION_STRING)
         self.summary_database = summary_database
         
-    def insert_summary(self, reponame, repolink, tests, errors, skipped, failures, runtime):
+    def insert_summary(self, reponame, repolink, tests, errors, skipped, failures, runtime, exception = ""):
         dbname = self.client[self.summary_database]
         collection_name = dbname["summary"]
         data_item = {
@@ -19,8 +19,20 @@ class CustomMongoDB:
             "skipped": skipped,
             "failures": failures,
             "runtime": runtime,
+            "exception": exception,
             "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
+        collection_name.insert_one(data_item)
+    
+    def insert_errors(self, reponame, repolink, exception):
+        dbname = self.client[self.summary_database]
+        collection_name = dbname["maven_error"]
+        data_item = {
+            "repo": reponame,
+            "link": repolink,
+            "exception": exception,
+            "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }        
         collection_name.insert_one(data_item)
     
     def insert_details(self, reponame, repolink, tests, errors, skipped, failures, runtime):

@@ -1,10 +1,6 @@
 # A single configration file to rule them all
 
-github:
-  username: usamazf
-  apitoken: 
-
-search:
+github_access_token:
 
 ssh_secretkey_path: /home/ubuntu/.ssh/id_rsa
 ssh_publickey_path: /home/ubuntu/.ssh/id_rsa.pub

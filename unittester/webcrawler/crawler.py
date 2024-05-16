@@ -1,21 +1,31 @@
 import time
 import argparse
+from os import environ as env
+from search_github import GitHubAPI
 
 # Declare few paths
-TEMP_PATHS = [
-    "https://github.com/ZHENFENG13/My-Blog.git",
-    "https://github.com/ZHENFENG13/My-Blog.git",
-    "https://github.com/ZHENFENG13/My-Blog.git"
-]
+MAX_PAGES   =  2  # 200
+PER_PAGE    = 50  # 50
+GIT_ACCESS_TOKEN = env["GIT_ACCESS_TOKEN"]
 
 def rabbit_crawler(producer_queue):
     # Create a producer instance
     from rabbit_producer import Producer
     prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", queue=producer_queue)
-    
-    for i in range(10):
-        for gitpath in TEMP_PATHS:
+
+    api_search = GitHubAPI(
+        access_token=GIT_ACCESS_TOKEN,
+        results_per_page=PER_PAGE,
+    )
+
+    # Search github using API for valid 
+    # repositories, using batches
+    for page in range(1, MAX_PAGES+1):
+        valid_repos = api_search.perform_search(page_num=page)
+        for gitpath in valid_repos:
             prod.publish(message=gitpath)
+        # Sleep between batches
+        if (page * PER_PAGE) % 1000 == 0: time.sleep(60)
 
     del prod
 
@@ -23,10 +33,18 @@ def pulsar_crawler(producer_queue):
     # Create a producer instance
     from pulsar_producer import Producer
     prod = Producer(host="pulsar", port=6650, topic=producer_queue)
-    
-    for i in range(10):
-        for gitpath in TEMP_PATHS:
-            prod.publish(message=gitpath) 
+
+    api_search = GitHubAPI(
+        access_token=GIT_ACCESS_TOKEN,
+        results_per_page=PER_PAGE,
+    )
+
+    # Search github using API for valid 
+    # repositories, using batches
+    for page in range(1, MAX_PAGES+1):
+        valid_repos = api_search.perform_search(page_num=page)
+        for gitpath in valid_repos:
+            prod.publish(message=gitpath)
 
     del prod
 
