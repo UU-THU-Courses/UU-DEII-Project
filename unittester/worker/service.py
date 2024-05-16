@@ -32,7 +32,7 @@ def rabbit_callback_func(channel, method, properties, body):
         )
     else:
         console_file = f"{repo_download_path}/temp-console-output-file.txt"
-        if os.isfile(console_file):
+        if os.path.isfile(console_file):
             with open(console_file, "r") as f:
                 console_log = f.read()
         else:

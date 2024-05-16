@@ -10,7 +10,7 @@ printf "Processing: ${GIT_REPO}"
 
 # Download the Repository
 # from GitHub
-git clone ${GIT_REPO} ${OUT_PATH} > /dev/null
+git clone --quiet ${GIT_REPO} ${OUT_PATH} > /dev/null
 
 # Change directory
 current=$(pwd)
