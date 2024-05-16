@@ -6,18 +6,19 @@ OUT_PATH="/testRepo"
 [ ! -z "$2" ] && OUT_PATH="$2"
 
 # Print console message
-printf "\nProcessing: ${GIT_REPO}\n"
+printf "Processing: ${GIT_REPO}"
 
 # Download the Repository
 # from GitHub
-git clone ${GIT_REPO} ${OUT_PATH}
+git clone ${GIT_REPO} ${OUT_PATH} > /dev/null
 
 # Change directory
 current=$(pwd)
 cd ${OUT_PATH}
 
 # Run maven tests
-mvn test > /dev/null 2>temp-console-output-file.txt
+#mvn test > /dev/null 2>temp-console-output-file.txt
+mvn test > temp-console-output-file.txt
 
 # Change directory back
 cd ${current}
