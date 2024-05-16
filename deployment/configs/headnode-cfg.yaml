@@ -90,13 +90,13 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "Pushing images to registery ...\n"
-  - docker compose -f /project/unittester/composev2.yaml pull
-  - docker compose -f /project/unittester/composev2.yaml build
-  - docker compose -f /project/unittester/composev2.yaml push
+  - docker compose -f /project/compose.yaml pull
+  - docker compose -f /project/compose.yaml build
+  - docker compose -f /project/compose.yaml push
 
   - printf "..."
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n\nDeploy the application stack on swarm ...\n"
-  - docker stack deploy --compose-file /project/unittester/composev2.yaml unittester
+  - docker stack deploy --compose-file /project/compose.yaml unittester

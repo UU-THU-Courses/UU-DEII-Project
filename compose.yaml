@@ -79,7 +79,7 @@ services:
 
   webui:
     image: 127.0.0.1:5000/webui
-    build: ./webui
+    build: ./unittester/webui
     ports:
       - "5100:5100"
     networks:
@@ -96,7 +96,7 @@ services:
 
   webcrawler:
     image: 127.0.0.1:5000/webcrawler
-    build: ./webcrawler
+    build: ./unittester/webcrawler
     networks:
       - frontend
     depends_on:
@@ -108,7 +108,7 @@ services:
 
   worker:
     image: 127.0.0.1:5000/worker
-    build: ./worker
+    build: ./unittester/worker
     networks:
       - backend
     depends_on:
