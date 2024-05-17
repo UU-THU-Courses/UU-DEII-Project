@@ -61,3 +61,10 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "Attempting to join the existing swarm ...\n"
   - python3 /project/deployment/utils/services.py --join-swarm --worker_addr="xxx.xxx.xxx.xxx" &
+
+  - printf "..."
+  - printf "\n=========================================================================================================\n"
+  - printf "\n=========================================================================================================\n"
+  - printf "\n=========================================================================================================\n"
+  - printf "Requesting swarm manager to add work load ...\n"
+  - python3 /project/deployment/utils/services.py --add-workload &

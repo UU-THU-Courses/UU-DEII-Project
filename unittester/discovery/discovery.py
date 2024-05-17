@@ -1,4 +1,5 @@
 import argparse, json
+import subprocess
 from flask import (
    Flask,
    request,
@@ -19,6 +20,15 @@ def send_token():
         return Response(json.dumps(data_dict), 200)
     else:
         return Response("Only GET available!", 400)
+
+@app.route("/run-workers", methods=["POST"])
+def fill_node():    
+    if request.method == "POST":
+        # docker stack deploy --compose-file /project/compose.yaml unittester
+        subprocess.call("bash /project/unittester/discovery/service_scale.sh", shell=True)
+        return Response("Success!", 200)
+    else:
+        return Response("Only POST available!", 400)
 
 @app.route("/drain-node", methods=["POST"])
 def drain_node():

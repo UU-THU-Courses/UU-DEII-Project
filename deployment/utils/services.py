@@ -18,7 +18,7 @@ def query_swarm_token(manager_addr, worker_addr):
             status_code = -1
         
         if status_code != 200:
-            print("Post link not available sleeping for 120 seconds ...")
+            print("GET link not available sleeping for 120 seconds ...")
             time.sleep(120)
 
     # Convert response to json                
@@ -48,7 +48,37 @@ def join_swarm(worker_addr):
     run_command = rf"docker swarm join --token {swarm_token} {manager_addr}:{manager_port}"
     subprocess.call(run_command, shell=True)
 
+def request_workload():
+    # Attempt to read the manager address
+    # from HEAD-IP.txt file at root path
+    while True:
+        try:
+            with open("/HEAD-IP.txt", "r") as f:
+                manager_addr = f.read().strip()
+            break
+        except:
+            print("Waiting 120 seconds before attempting to read HEAD-IP.txt again ...")
+            time.sleep(120)
+
+    # Wait until the swarm token file 
+    # is not available at head node
+    status_code = -1
+    while status_code != 200:
+        try:
+            response = requests.post(f"http://{manager_addr}:5200/run-workers", params={"count": 4}, timeout=5)
+            status_code = response.status_code
+            print(f"Got status code: {status_code} ...")
+        except:
+            print("Exception was thrown ...")
+            status_code = -1
+        
+        if status_code != 200:
+            print("POST link not available sleeping for 120 seconds ...")
+            time.sleep(120)
+
+
 if __name__ == "__main__":
     fire.Fire({
         "--join-swarm": join_swarm,
+        "--add-workload": request_workload,
     })
