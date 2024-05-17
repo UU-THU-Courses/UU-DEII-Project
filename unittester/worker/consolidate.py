@@ -24,11 +24,12 @@ def process_reports(xmlpath):
             final_report["errors"] += int(root.attrib["errors"])
             final_report["skipped"] += int(root.attrib["skipped"])
             final_report["failures"] += int(root.attrib["failures"])
-            final_report["runtime"] += float(root.attrib["time"])
+            final_report["runtime"] += round(float(root.attrib["time"]), 2)
             
             # for child in root:
             #     if child.tag == "testcase":
             #         print(child.tag, child.attrib)
+
     except Exception as ex:
         final_report["exception"] = ex.__str__()
 

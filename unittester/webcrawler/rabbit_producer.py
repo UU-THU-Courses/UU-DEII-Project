@@ -6,7 +6,7 @@ class Producer:
         self.channel = None
         while True:
             try: 
-                self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password)))
+                self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password), heartbeat=1200))
                 self.channel = self.connection.channel()
                 break
             except:
