@@ -90,8 +90,8 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "Sourcing github access token ...\n"
-  - source /crawlerdata/GITHUB_ACCESS_TOKEN.sh
-  - echo $GITHUB_ACCESS_TOKEN
+  - bash /crawlerdata/GITHUB_ACCESS_TOKEN.sh
+  - printf "\nToken: ${GITHUB_ACCESS_TOKEN}"
 
   - printf "..."
   - printf "\n=========================================================================================================\n"
