@@ -8,7 +8,7 @@ from utils.keygen import generate_keypair, read_public_key
 
 MAX_ATTEMPTS = 10
 
-def deploy_headnode(name_prefix, configs, ssh_key):
+def deploy_headnode(name_prefix, configs, ssh_key, git_access_token):
     """A module to create the headnode and send config files."""
 
     cloud_cfg = parse_configs(config_path=configs["instance_configs"])
@@ -17,6 +17,14 @@ def deploy_headnode(name_prefix, configs, ssh_key):
     # Append new key for all users
     for user in cloud_cfg["users"]:
         user["ssh_authorized_keys"].append(ssh_key)
+
+    # Write GIT access token to a 
+    # local file on the head node
+    cloud_cfg["write_files"] = [{
+        "content": f"#!/bin/bash\nexport GITHUB_ACCESS_TOKEN={git_access_token}",
+        "path": "/crawlerdata/GITHUB_ACCESS_TOKEN.sh",
+        "permissions": "0644",
+    }]
 
     os.makedirs("__temp_dir__", exist_ok=True)
     write_configs(configs["instance_configs"], cloud_cfg)
@@ -111,7 +119,7 @@ def full_deployment(config_file = "configs/deploy-cfg.yaml", keypair_path="temp_
     # Perform deployment of headnode
     # rest all will be handled by headnode
     print("Deploying head node ... ")
-    head_ip = deploy_headnode(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", configs=configs["instances"]["headnode"], ssh_key=ssh_key)
+    head_ip = deploy_headnode(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", configs=configs["instances"]["headnode"], ssh_key=ssh_key, git_access_token=configs["github_access_token"])
     print(f"Head node deployed at {head_ip} ...")
     
     # Obtain the swarm token
