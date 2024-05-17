@@ -1,3 +1,4 @@
+import os
 import requests
 
 verbose = False
@@ -83,25 +84,29 @@ class GitHubAPI:
         # Extend the base URL to fetch
         # multiple pages of the search.
         final_url = self.base_apiurl + self.base_query + f"&page={page_num}"
-  
-        if verbose: print(f"{'Index':6s} - {'HTML_URL':85s} - {'Private':7s} - {'Visibility':10s} - {'Language':10s} - {'Fork':5s}")
         
         # Query and fetch results
-        indx = 1
-        valid_repos = []
+        discovered_repos = []
         response = requests.get(url=final_url, headers=self.headers)
         if response.status_code == 200:
             response_dict = response.json()
             # Use field URL to query if the response
             # repositories contains desired filename
-            for item in response_dict["items"]:
-                if self.validity_check(url=item["url"]):
-                    valid_repos += [item['html_url']]
-                    if verbose: print(f"{str(indx):6s} - {item['html_url']:85s} - {str(item['private']):7s} - {str(item['visibility']):10s} - {str(item['language']):10s} - {str(item['fork']):5s}")
-                    indx += 1
-
+            for repo in response_dict["items"]:
+                discovered_repos += [{
+                    "reponame": os.path.splitext(os.path.basename(repo["html_url"]))[0],
+                    "private": repo["private"],
+                    "url": repo["url"],
+                    "html_url": repo["html_url"],
+                    "fork": repo["fork"],
+                    "stargazers_count": repo["stargazers_count"],
+                    "language": repo["language"],
+                    "topics": repo["topics"],
+                    "visibility": repo["visibility"],                   
+                }]
+        
         # Return final list of repositories
-        return valid_repos
+        return discovered_repos
   
     def validity_check(self, url):
         # Make a query to the github api

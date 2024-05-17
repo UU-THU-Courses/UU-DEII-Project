@@ -101,13 +101,13 @@ def full_deployment(config_file = "configs/deploy-cfg.yaml"):
     # Perform deployment of headnode
     # rest all will be handled by headnode
     print("Deploying head node ... ")
-    head_ip = deploy_headnode(name_prefix=f"UZ-{identifier}", configs=configs["instances"]["headnode"], ssh_key=ssh_key)
+    head_ip = deploy_headnode(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", configs=configs["instances"]["headnode"], ssh_key=ssh_key)
     print(f"Head node deployed at {head_ip} ...")
     
     # Obtain the swarm token
     # docker swarm join-token manager -q
     print("\nDeploying worker nodes ... ")
-    worker_ips = launch_workernodes(name_prefix=f"UZ-{identifier}", num_nodes=configs["instances"]["workernodes"]["numworkers"], head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"], ssh_key=ssh_key)
+    worker_ips = launch_workernodes(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", num_nodes=configs["instances"]["workernodes"]["numworkers"], head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"], ssh_key=ssh_key)
 
 
 if __name__ == "__main__":

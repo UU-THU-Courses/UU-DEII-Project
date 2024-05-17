@@ -1,11 +1,12 @@
 import time
 import argparse
+import json
 from os import environ as env
 from search_github import GitHubAPI
 
 # Declare few paths
-MAX_PAGES   =  2  # 200
-PER_PAGE    = 50  # 50
+MAX_PAGES   = 200
+PER_PAGE    = 100
 GIT_ACCESS_TOKEN = env["GIT_ACCESS_TOKEN"]
 
 def rabbit_crawler(producer_queue):
@@ -21,9 +22,14 @@ def rabbit_crawler(producer_queue):
     # Search github using API for valid 
     # repositories, using batches
     for page in range(1, MAX_PAGES+1):
-        valid_repos = api_search.perform_search(page_num=page)
-        for gitpath in valid_repos:
-            prod.publish(message=gitpath)
+        discovered_repos = api_search.perform_search(page_num=page)
+
+        # Go through each discovered repository
+        # and validate that it contains pom.xml
+        for item in discovered_repos:
+            if api_search.validity_check(url = item["url"]):
+                prod.publish(message=json.dumps(obj = item))
+
         # Sleep between batches
         if (page * PER_PAGE) % 1000 == 0: time.sleep(60)
 
@@ -42,9 +48,16 @@ def pulsar_crawler(producer_queue):
     # Search github using API for valid 
     # repositories, using batches
     for page in range(1, MAX_PAGES+1):
-        valid_repos = api_search.perform_search(page_num=page)
-        for gitpath in valid_repos:
-            prod.publish(message=gitpath)
+        discovered_repos = api_search.perform_search(page_num=page)
+
+        # Go through each discovered repository
+        # and validate that it contains pom.xml
+        for item in discovered_repos:
+            if api_search.validity_check(url = item["url"]):
+                prod.publish(message=json.dumps(obj = item))
+
+        # Sleep between batches
+        if (page * PER_PAGE) % 1000 == 0: time.sleep(60)
 
     del prod
 

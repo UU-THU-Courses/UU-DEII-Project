@@ -24,6 +24,20 @@ class CustomMongoDB:
         }
         collection_name.insert_one(data_item)
     
+    def insert_gitrepo(self, reponame, repolink, visibility, topics, stargazers_count, language):
+        dbname = self.client[self.summary_database]
+        collection_name = dbname["repositories"]
+        data_item = {
+            "reponame": reponame,
+            "repolink": repolink,
+            "visibility": visibility,
+            "topics": topics,
+            "stargazers": stargazers_count,
+            "language": language,
+            "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        collection_name.insert_one(data_item)        
+
     def insert_errors(self, reponame, repolink, exception):
         dbname = self.client[self.summary_database]
         collection_name = dbname["maven_error"]

@@ -6,6 +6,9 @@ ssh_secretkey_path: /home/ubuntu/.ssh/id_rsa
 ssh_publickey_path: /home/ubuntu/.ssh/id_rsa.pub
 
 instances:
+  name_prefix: UZ                 # Used to create the node name
+                                  # Template: prefix-int(4)-headnode
+                                  # Template: prefix-int(4)-worker-n
   headnode:
     instance_flavor: ssc.medium
     instance_source: Ubuntu 22.04 - 2024.01.15
