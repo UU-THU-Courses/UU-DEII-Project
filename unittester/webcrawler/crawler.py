@@ -7,7 +7,11 @@ from search_github import GitHubAPI
 # Declare few paths
 MAX_PAGES   = 200
 PER_PAGE    = 100
-GITHUB_ACCESS_TOKEN = env["GITHUB_ACCESS_TOKEN"]
+
+# GITHUB_ACCESS_TOKEN = env["GITHUB_ACCESS_TOKEN"]
+
+with open("/crawlerdata/GITHUB_ACCESS_TOKEN.txt", "r") as f:
+    GITHUB_ACCESS_TOKEN = f.read().strip()
 
 def rabbit_crawler(producer_queue):
     # Create a producer instance

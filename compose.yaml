@@ -101,6 +101,8 @@ services:
       - frontend
     depends_on:
       - rabbit
+    volumes:
+      - /crawlerdata:/crawlerdata
     environment:
       - GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}
     deploy:

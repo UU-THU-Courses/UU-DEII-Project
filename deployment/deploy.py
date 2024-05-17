@@ -21,8 +21,8 @@ def deploy_headnode(name_prefix, configs, ssh_key, github_access_token):
     # Write GIT access token to a 
     # local file on the head node
     cloud_cfg["write_files"] = [{
-        "content": f"#!/bin/bash\nexport GITHUB_ACCESS_TOKEN={github_access_token}\n",
-        "path": "/crawlerdata/GITHUB_ACCESS_TOKEN.sh",
+        "content": github_access_token,
+        "path": "/crawlerdata/GITHUB_ACCESS_TOKEN.txt",
         "permissions": "0644",
     }]
 
