@@ -7,7 +7,7 @@ from search_github import GitHubAPI
 # Declare few paths
 MAX_PAGES   = 200
 PER_PAGE    = 100
-GIT_ACCESS_TOKEN = env["GIT_ACCESS_TOKEN"]
+GITHUB_ACCESS_TOKEN = env["GITHUB_ACCESS_TOKEN"]
 
 def rabbit_crawler(producer_queue):
     # Create a producer instance
@@ -15,7 +15,7 @@ def rabbit_crawler(producer_queue):
     prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", queue=producer_queue)
 
     api_search = GitHubAPI(
-        access_token=GIT_ACCESS_TOKEN,
+        access_token=GITHUB_ACCESS_TOKEN,
         results_per_page=PER_PAGE,
     )
 
@@ -41,7 +41,7 @@ def pulsar_crawler(producer_queue):
     prod = Producer(host="pulsar", port=6650, topic=producer_queue)
 
     api_search = GitHubAPI(
-        access_token=GIT_ACCESS_TOKEN,
+        access_token=GITHUB_ACCESS_TOKEN,
         results_per_page=PER_PAGE,
     )
 
