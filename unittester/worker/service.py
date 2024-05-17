@@ -118,7 +118,7 @@ def pulsar_callback_func(received_msg):
             # Insert error to the errors table
             mongo_db.insert_errors(
                 reponame=received_msg["reponame"],
-                repolink=received_msg,
+                repolink=received_msg["html_url"],
                 exception=console_log
             )
 
