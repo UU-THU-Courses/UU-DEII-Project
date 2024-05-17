@@ -4,7 +4,7 @@ import subprocess
 
 def generate_keypair(keypath, keyname):
     """A cryptographic module to generate RSA keypair."""
-    shutil.rmtree(keypath)
+    if os.path.isdir(keypath): shutil.rmtree(keypath)
     os.makedirs(keypath, exist_ok=True)
     
     run_cmd = f'ssh-keygen -q -t rsa -N "" -f {keypath}/{keyname}'
