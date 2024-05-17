@@ -120,11 +120,11 @@ services:
       - rabbit
       - mongo
     deploy:
-      replicas: 5
+      replicas: 8
       restart_policy:
         condition: on-failure
       placement:
-        max_replicas_per_node: 5
+        max_replicas_per_node: 8
 
 networks:
   frontend:
