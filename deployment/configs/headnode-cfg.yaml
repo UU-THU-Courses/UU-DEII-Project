@@ -73,6 +73,15 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
+  - printf "Pushing images to registery ...\n"
+  - docker compose -f /project/compose.yaml pull
+  - docker compose -f /project/compose.yaml build
+  - docker compose -f /project/compose.yaml push
+
+  - printf "..."
+  - printf "\n=========================================================================================================\n"
+  - printf "\n=========================================================================================================\n"
+  - printf "\n=========================================================================================================\n"
   - printf "Installing dependencies for discovery ...\n"
   - pip3 install -r /project/unittester/discovery/requirements.txt
 
@@ -84,15 +93,6 @@ runcmd:
   - tmux new-session -d -s discoveryService
   - tmux send-keys -t discoveryService "python3 /project/unittester/discovery/discovery.py --host=0.0.0.0 --port=5200 --debug" C-m
   - tmux detach -s discoveryService
-
-  - printf "..."
-  - printf "\n=========================================================================================================\n"
-  - printf "\n=========================================================================================================\n"
-  - printf "\n=========================================================================================================\n"
-  - printf "Pushing images to registery ...\n"
-  - docker compose -f /project/compose.yaml pull
-  - docker compose -f /project/compose.yaml build
-  - docker compose -f /project/compose.yaml push
 
   - printf "..."
   - printf "\n=========================================================================================================\n"

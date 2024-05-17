@@ -24,7 +24,6 @@ def send_token():
 @app.route("/run-workers", methods=["POST"])
 def fill_node():    
     if request.method == "POST":
-        # docker stack deploy --compose-file /project/compose.yaml unittester
         subprocess.call("bash /project/unittester/discovery/service_scale.sh", shell=True)
         return Response("Success!", 200)
     else:

@@ -58,6 +58,7 @@ services:
     depends_on:
       - mongo
     environment:
+      - VCAP_APP_HOST=0.0.0.0
       - ME_CONFIG_MONGODB_SERVER=mongo
       - ME_CONFIG_MONGODB_PORT=27017
       - ME_CONFIG_MONGODB_ADMINUSERNAME=custom_admin
@@ -103,8 +104,6 @@ services:
       - rabbit
     volumes:
       - /crawlerdata:/crawlerdata
-    environment:
-      - GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}
     deploy:
       replicas: 1
       restart_policy:

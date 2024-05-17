@@ -26,16 +26,20 @@ def rabbit_crawler(producer_queue):
     # Search github using API for valid 
     # repositories, using batches
     for page in range(1, MAX_PAGES+1):
-        discovered_repos = api_search.perform_search(page_num=page)
+        try:
+            discovered_repos = api_search.perform_search(page_num=page)
 
-        # Go through each discovered repository
-        # and validate that it contains pom.xml
-        for item in discovered_repos:
-            if api_search.validity_check(url = item["url"]):
-                prod.publish(message=json.dumps(obj = item))
+            # Go through each discovered repository
+            # and validate that it contains pom.xml
+            for item in discovered_repos:
+                if api_search.validity_check(url = item["url"]):
+                    prod.publish(message=json.dumps(obj = item))
 
-        # Sleep between batches
-        if (page * PER_PAGE) % 1000 == 0: time.sleep(60)
+            # Sleep between batches
+            if (page * PER_PAGE) % 1000 == 0: time.sleep(60)
+        
+        except Exception as e:
+            pass
 
     del prod
 
