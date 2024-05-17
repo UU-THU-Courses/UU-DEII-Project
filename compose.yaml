@@ -67,7 +67,6 @@ services:
       - ME_CONFIG_BASICAUTH_PASSWORD=custom_passw
     networks:
       - frontend
-      - backend
     ports:
       - "8081:8081"
     deploy:

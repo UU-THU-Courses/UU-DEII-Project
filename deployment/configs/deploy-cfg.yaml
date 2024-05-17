@@ -10,7 +10,7 @@ instances:
                                   # Template: prefix-int(4)-headnode
                                   # Template: prefix-int(4)-worker-n
   headnode:
-    instance_flavor: ssc.medium
+    instance_flavor: ssc.xlarge.highcpu
     instance_source: Ubuntu 22.04 - 2024.01.15
     authorized_keys: USAMA-ACCESS-KEY
     private_network: UPPMAX 2024/1-4 Internal IPv4 Network
@@ -20,7 +20,7 @@ instances:
   workernodes:
     numworkers: 2
     workercfgs:
-      instance_flavor: ssc.medium
+      instance_flavor: ssc.xlarge
       instance_source: Ubuntu 22.04 - 2024.01.15
       authorized_keys: USAMA-ACCESS-KEY
       private_network: UPPMAX 2024/1-4 Internal IPv4 Network
