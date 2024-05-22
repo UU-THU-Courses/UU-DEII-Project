@@ -97,6 +97,9 @@ services:
   webcrawler:
     image: 127.0.0.1:5000/webcrawler
     build: ./unittester/webcrawler
+    environment:
+      REPLICA: "{{.Task.Slot}}"
+      MAX_REPLICA: 4
     networks:
       - frontend
     depends_on:
@@ -104,7 +107,7 @@ services:
     volumes:
       - /crawlerdata:/crawlerdata
     deploy:
-      replicas: 1
+      replicas: 4
       restart_policy:
         condition: none
       placement:
@@ -120,11 +123,9 @@ services:
       - rabbit
       - mongo
     deploy:
-      replicas: 8
+      replicas: 4
       restart_policy:
         condition: on-failure
-      placement:
-        max_replicas_per_node: 8
 
 networks:
   frontend:

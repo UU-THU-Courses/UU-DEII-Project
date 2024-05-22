@@ -63,8 +63,8 @@ class GitHubAPI:
                 query += "+topic:" + self.parameters["topics"][0]
             else:
                 query += "topic:" + self.parameters["topics"][0]
-        for topic in self.parameters["topics"][1:]:
-            query += f"+topic:{topic}"
+            for topic in self.parameters["topics"][1:]:
+                query += f"+topic:{topic}"
 
         # Only search for public repositories
         if len(self.parameters["languages"]) > 0 or len(self.parameters["topics"]) > 0: query += "+"

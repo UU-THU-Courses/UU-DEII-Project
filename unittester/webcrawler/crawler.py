@@ -5,15 +5,13 @@ from os import environ as env
 from search_github import GitHubAPI
 
 # Declare few paths
-MAX_PAGES   = 200
+MAX_PAGES   = 500
 PER_PAGE    = 100
-
-# GITHUB_ACCESS_TOKEN = env["GITHUB_ACCESS_TOKEN"]
 
 with open("/crawlerdata/GITHUB_ACCESS_TOKEN.txt", "r") as f:
     GITHUB_ACCESS_TOKEN = f.read().strip()
 
-def rabbit_crawler(producer_queue):
+def rabbit_crawler(producer_queue, replica, max_replicas):
     # Create a producer instance
     from rabbit_producer import Producer
     prod = Producer(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", queue=producer_queue)
@@ -21,11 +19,12 @@ def rabbit_crawler(producer_queue):
     api_search = GitHubAPI(
         access_token=GITHUB_ACCESS_TOKEN,
         results_per_page=PER_PAGE,
+        topics=[],
     )
 
     # Search github using API for valid 
     # repositories, using batches
-    for page in range(1, MAX_PAGES+1):
+    for page in range(replica, MAX_PAGES+1, max_replicas):
         try:
             discovered_repos = api_search.perform_search(page_num=page)
 
@@ -43,7 +42,7 @@ def rabbit_crawler(producer_queue):
 
     del prod
 
-def pulsar_crawler(producer_queue):
+def pulsar_crawler(producer_queue, replica, max_replicas):
     # Create a producer instance
     from pulsar_producer import Producer
     prod = Producer(host="pulsar", port=6650, topic=producer_queue)
@@ -55,7 +54,7 @@ def pulsar_crawler(producer_queue):
 
     # Search github using API for valid 
     # repositories, using batches
-    for page in range(1, MAX_PAGES+1):
+    for page in range(replica, MAX_PAGES+1, max_replicas):
         discovered_repos = api_search.perform_search(page_num=page)
 
         # Go through each discovered repository
@@ -84,8 +83,12 @@ if __name__ == "__main__":
         default="gitrepos",
     )
     args = parser.parse_args()
-    
+
+    replica = int(env["REPLICA"])
+    max_replicas = int(env["MAX_REPLICA"])
+    print(f"I am replica: {replica} of {max_replicas}.")
+
     if args.pulsar:
-        pulsar_crawler(args.target_queue)
+        pulsar_crawler(args.target_queue, replica, max_replicas)
     else:
-        rabbit_crawler(args.target_queue)
+        rabbit_crawler(args.target_queue, replica, max_replicas)
