@@ -31,6 +31,8 @@ if [ "${drain_count} " -le "${worker_count}" ]; then
         printf "Draining: ${worker_nodes[idx]}\n"
         # Set the node availability to drain
         docker node update --availability drain ${worker_nodes[idx]}
+        # Remove the node??
+        docker node rm --force ${worker_nodes[idx]}
         # Log the node name to a file
         printf "${worker_nodes[idx]}\n" >> ${log_filename}
     done
