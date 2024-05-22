@@ -19,7 +19,6 @@ def rabbit_crawler(producer_queue, replica, max_replicas):
     api_search = GitHubAPI(
         access_token=GITHUB_ACCESS_TOKEN,
         results_per_page=PER_PAGE,
-        topics=[],
     )
 
     # Search github using API for valid 
