@@ -6,8 +6,6 @@ from utils.instance import create_instance, delete_instance
 from utils.configs import parse_configs, write_configs
 from utils.keygen import generate_keypair, read_public_key
 
-MAX_ATTEMPTS = 10
-
 def deploy_headnode(name_prefix, configs, ssh_key, github_access_token):
     """A module to create the headnode and send config files."""
 
