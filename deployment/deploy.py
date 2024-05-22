@@ -86,7 +86,7 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs, ssh_key):
     # Retrun worker ip addresses
     return ip_addresses
 
-def add_workernodes(num_nodes, head_ip = None, config_file="configs/deploy-cfg.yaml", keypair_path="__temp_dir__/temp_keypairs", keyname="id_rsa"):
+def add_workernodes(num_nodes, head_ip = None, config_file="configs/deploy-cfg.yaml", keypair_path="__temp_dir__/keypair", keyname="id_rsa"):
     # Open the configurations file
     print("Parsing provided configurations file... ")
     configs = parse_configs(config_path=config_file)
