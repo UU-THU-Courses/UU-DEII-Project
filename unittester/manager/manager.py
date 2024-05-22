@@ -1,5 +1,9 @@
-import argparse, json
+import os
+import random
+import argparse
 import subprocess
+
+import json
 from flask import (
    Flask,
    request,
@@ -31,8 +35,18 @@ def fill_node():
 
 @app.route("/drain-node", methods=["POST"])
 def drain_node():
-    raise NotImplementedError("Module not implemented yet!!!")
-
+    if request.method == "POST":
+        log_fpath = f"/drain_log_{random.randint(1000, 9999)}.txt"
+        node_count = request.args["node_count"]
+        subprocess.call(f"bash /project/unittester/manager/scripts/drain.sh {node_count} {log_fpath}", shell=True)
+        node_names = []
+        if os.path.exists(log_fpath):
+            with open(log_fpath) as logfile:
+                node_names = logfile.read().splitlines()
+            os.remove(log_fpath)
+        return Response(json.dumps({"nodes": node_names}), 200)
+    else:
+        return Response("Only POST available!", 400)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

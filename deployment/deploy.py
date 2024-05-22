@@ -1,6 +1,7 @@
 import os
 import fire
 import random
+import requests
 
 from utils.instance import create_instance, delete_instance
 from utils.configs import parse_configs, write_configs
@@ -100,8 +101,15 @@ def add_workernodes(num_nodes, head_ip = None, config_file="configs/deploy-cfg.y
     print("\nDeploying worker nodes ... ")
     worker_ips = launch_workernodes(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", num_nodes=num_nodes, head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"], ssh_key=None)
 
-def del_workernodes(num_nodes, head_ip):
-    raise NotImplementedError()
+def del_workernodes(num_nodes, head_ip, manager_port = 5200):
+    response = requests.post(f"http://{head_ip}:{manager_port}/drain-node", params={"node_count": 2}, timeout=5)
+    if response.status_code == 200:
+        resp_dict = response.json()
+        print(resp_dict)
+        # for servername in resp_dict["nodes"]:
+        #     delete_instance(servername)
+    else:
+        print(response.status_code, response.content)
 
 def full_deployment(config_file = "configs/deploy-cfg.yaml", keypair_path="__temp_dir__/keypair", keyname="id_rsa"):
     # Open the configurations file

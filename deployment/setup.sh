@@ -9,6 +9,8 @@ then
     exit "$?";
 fi
 
+export NEEDRESTART_MODE=a
+
 # Perform updates and upgrade
 apt update; apt -y upgrade
 
