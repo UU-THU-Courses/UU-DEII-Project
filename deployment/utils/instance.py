@@ -126,4 +126,11 @@ def delete_instance(server_name):
     # session using credentials obtained
     sess = session.Session(auth=auth)
     nova = client.Client("2.1", session=sess)
-    nova.servers.delete(server_name)
+
+    # Find the server using its name since we
+    # need its id to perform delete operation
+    server_list = nova.servers.list(search_opts={"name": server_name})
+    if len(server_list) > 0:
+        nova.servers.delete(server_list[0].id)
+    else:
+        raise Exception(f"Unable to find a matching server with name: {server_name}")
