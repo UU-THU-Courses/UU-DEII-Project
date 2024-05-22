@@ -53,7 +53,7 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "Installing dependencies for controller ...\n"
-  - pip3 install -r /project/unittester/discovery/requirements.txt
+  - pip3 install -r /project/unittester/manager/requirements.txt
 
   - printf "..."
   - printf "\n=========================================================================================================\n"
