@@ -2,7 +2,7 @@ import os
 import fire
 import random
 
-from utils.requisition import create_instance
+from utils.instance import create_instance, delete_instance
 from utils.configs import parse_configs, write_configs
 from utils.keygen import generate_keypair, read_public_key
 
@@ -87,10 +87,7 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs, ssh_key):
     # Retrun worker ip addresses
     return ip_addresses
 
-def del_workernode(node_ip):
-    raise NotImplementedError()
-
-def add_workernode(num_nodes, head_ip = None, config_file="configs/deploy-cfg.yaml", keypair_path="temp_keypairs", keyname="id_rsa"):
+def add_workernodes(num_nodes, head_ip = None, config_file="configs/deploy-cfg.yaml", keypair_path="temp_keypairs", keyname="id_rsa"):
     # Open the configurations file
     print("Parsing provided configurations file... ")
     configs = parse_configs(config_path=config_file)
@@ -105,7 +102,10 @@ def add_workernode(num_nodes, head_ip = None, config_file="configs/deploy-cfg.ya
     print("\nDeploying worker nodes ... ")
     worker_ips = launch_workernodes(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", num_nodes=num_nodes, head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"], ssh_key=None)
 
-def full_deployment(config_file = "configs/deploy-cfg.yaml", keypair_path="temp_keypairs", keyname="id_rsa"):
+def del_workernodes(num_nodes, head_ip):
+    raise NotImplementedError()
+
+def full_deployment(config_file = "configs/deploy-cfg.yaml", keypair_path="__temp_dir__/keypair", keyname="id_rsa"):
     # Open the configurations file
     print("Parsing provided configurations file... ")
     configs = parse_configs(config_path=config_file)
@@ -131,6 +131,6 @@ def full_deployment(config_file = "configs/deploy-cfg.yaml", keypair_path="temp_
 if __name__ == "__main__":
     fire.Fire({
         "--full": full_deployment,
-        "--add-node": add_workernode,
-        "--del-node": del_workernode,
+        "--add-nodes": add_workernodes,
+        "--del-nodes": del_workernodes,
     })
