@@ -10,7 +10,7 @@ worker_count=$(docker node inspect --format '{{.Description.Hostname}}' $(docker
 n_containers=$(docker service inspect --format '{{.Spec.Mode.Replicated.Replicas}}' unittester_worker)
 
 # Compute the scale downed containers
-((n_containers-=8*worker_count))
+((n_containers-=8*drain_count))
 
 printf "# of worker nodes: ${worker_count}\n"
 
