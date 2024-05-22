@@ -16,6 +16,7 @@ def create_instance(name, configs, debug = False):
     floating_ip_pool_name   = configs["floating_ip_pool"]
     floating_ip             = configs["floating_ip_addr"]
     cfg_file_path           = configs["instance_configs"]
+    secgroups               = configs["security_groups"]
 
     # Get OpenStack configruations from 
     # environment variables
@@ -45,12 +46,6 @@ def create_instance(name, configs, debug = False):
         nics = [{"net-id": net.id}]
     else:
         sys.exit("private-net not defined.")
-
-    # Check that configuration file is available
-    #print("Path at terminal when executing this file")
-    #print(os.getcwd() + "\n")
-    #cfg_file_path =  os.getcwd()+"/cloud-cfg.txt"
-    secgroups = ["default"]
 
     # Create requested number of instances
     if debug: print("Creating instances ... ")

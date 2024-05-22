@@ -2,9 +2,6 @@
 
 github_access_token:
 
-ssh_secretkey_path: /home/ubuntu/.ssh/id_rsa
-ssh_publickey_path: /home/ubuntu/.ssh/id_rsa.pub
-
 instances:
   name_prefix: UZ                 # Used to create the node name
                                   # Template: prefix-int(4)-headnode
@@ -14,6 +11,9 @@ instances:
     instance_source: Ubuntu 22.04 - 2024.01.15
     authorized_keys: USAMA-ACCESS-KEY
     private_network: UPPMAX 2024/1-4 Internal IPv4 Network
+    security_groups:
+      - default
+      - usama-sg
     floating_ip_pool: null
     floating_ip_addr: null
     instance_configs: configs/headnode-cfg.yaml
@@ -24,6 +24,8 @@ instances:
       instance_source: Ubuntu 22.04 - 2024.01.15
       authorized_keys: USAMA-ACCESS-KEY
       private_network: UPPMAX 2024/1-4 Internal IPv4 Network
+      security_groups:
+        - default
       floating_ip_pool: null
       floating_ip_addr: null
       instance_configs: configs/worknode-cfg.yaml
