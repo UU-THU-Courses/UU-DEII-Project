@@ -13,9 +13,9 @@ def process_reports(xmlpath):
         "exception": ""
     }
 
-    try:
-        # Process XML report files
-        for xml_file in xml_files:
+    # Process XML report files
+    for xml_file in xml_files:
+        try:
             tree = ET.parse(xml_file)
             root = tree.getroot()
 
@@ -30,8 +30,8 @@ def process_reports(xmlpath):
             #     if child.tag == "testcase":
             #         print(child.tag, child.attrib)
 
-    except Exception as ex:
-        final_report["exception"] = ex.__str__()
+        except Exception as ex:
+            final_report["exception"] += ex.__str__() + "\n\n"
 
     return final_report
 
