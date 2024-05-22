@@ -108,3 +108,22 @@ def get_ip_address(instance, private_net):
 
     # Return the obtained ip-addresses
     return ip_address
+
+def delete_instance(server_name):
+    # Get OpenStack configruations from 
+    # environment variables
+    loader = loading.get_plugin_loader("password")
+    auth = loader.load_from_options(
+        auth_url=env["OS_AUTH_URL"],
+        username=env["OS_USERNAME"],
+        password=env["OS_PASSWORD"],
+        project_name=env["OS_PROJECT_NAME"],
+        project_domain_id=env["OS_PROJECT_DOMAIN_ID"],
+        user_domain_name=env["OS_USER_DOMAIN_NAME"]
+    )
+
+    # Authorize the user and create a new
+    # session using credentials obtained
+    sess = session.Session(auth=auth)
+    nova = client.Client("2.1", session=sess)
+    nova.servers.delete(server_name)
