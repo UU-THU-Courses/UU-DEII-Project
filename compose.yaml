@@ -15,6 +15,9 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - "node.role==manager"
 
   pulsar:
     hostname: pulsar
@@ -109,10 +112,7 @@ services:
     deploy:
       replicas: 4
       restart_policy:
-        condition: none
-      placement:
-        constraints:
-          - "node.role==manager"
+        condition: on-failure
 
   worker:
     image: 127.0.0.1:5000/worker
@@ -126,6 +126,8 @@ services:
       replicas: 4
       restart_policy:
         condition: on-failure
+      placement:
+        max_replicas_per_node: 8
 
 networks:
   frontend:
