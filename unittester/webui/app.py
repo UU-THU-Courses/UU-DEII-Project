@@ -22,7 +22,8 @@ def queue_summary():
     summary = generate_summary(mongo_reader=mongo_reader)
     return render_template(
         "summary.html", 
-        summary=summary
+        summary=summary,
+        refresh=True,
     )
 
 @app.route("/git-repos")
@@ -39,7 +40,8 @@ def git_repors():
         template_name_or_list="repos.html", 
         message=message,
         message_type=message_type,
-        repo_info=repo_info
+        repo_info=repo_info,
+        refresh=True,
     )
 
 @app.route("/unittests")
@@ -56,7 +58,8 @@ def unit_tests():
         template_name_or_list="unittests.html", 
         message=message,
         message_type=message_type,
-        repo_info=repo_info
+        repo_info=repo_info,
+        refresh=True,
     )
 
 @app.route("/failures")
@@ -73,7 +76,8 @@ def failures():
         template_name_or_list="failures.html", 
         message=message,
         message_type=message_type,
-        repo_info=repo_info
+        repo_info=repo_info,
+        refresh=True,
     )
 
 @app.route("/cluster")
