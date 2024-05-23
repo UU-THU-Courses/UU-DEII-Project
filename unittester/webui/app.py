@@ -20,7 +20,10 @@ def dashboard():
 @app.route("/summary")
 def queue_summary():
     summary = generate_summary(mongo_reader=mongo_reader)
-    return render_template("summary.html", message="This is a warning message. -- " + summary.__str__(), message_type="WARNING")
+    return render_template(
+        "summary.html", 
+        summary=summary
+    )
 
 @app.route("/git-repos")
 def git_repors():
