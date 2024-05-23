@@ -9,11 +9,20 @@ class MongodbReader:
     def fetch_repositories(self):
         dbname = self.client[self.summary_database]
         collection_name = dbname["repositories"]
-        # if not collection_name.count_documents(filter={"reponame": reponame, "repolink": repolink}, limit = 1): return 0, None
         documents = collection_name.find(projection={"_id": 0})
         response = []
         for document in documents:
             response += [dict(document)]
+        return response
+ 
+    def fetch_summary(self):
+        dbname = self.client[self.summary_database]
+        collection_name = dbname["summary"]
+        documents = collection_name.find(projection={"_id": 0})
+        response = []
+        for document in documents:
+            response += [dict(document)]
+            response[-1]["runtime"] = round(response[-1]["runtime"], 2)
         return response
 
     def __del__(self):

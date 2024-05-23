@@ -1,22 +1,40 @@
 {% extends "index.html" %}
 
 {% block content %}
+    <div class="card-header">
+        <h5 class="card-title">Unit testing results.</h5>
+        <h6 class="card-subtitle text-muted">
+            Following is a list of github repositories that were successfully processed by the back-end worker containers.
+        </h6>
+    </div>
     <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Configuration required</h5>
-        </div>
         <div class="card-body">
-
-            <div class="alert alert-warning alert-outline alert-dismissible" role="alert">
-                <div class="alert-icon">
-                    <i class="far fa-fw fa-bell"></i>
-                </div>
-
-                <div class="alert-message">
-                    <strong>Reducer requires a configured compute package</strong>
-                    <p>Please set a compute package <a href="/context">/here</a></p>
-                </div>
-            </div>
+                <table class="table" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:20%;">Repository</th>
+                        <th style="width:35%">Link</th>
+                        <th style="width:10%; justify-content: right; text-align: right; align-items: right;">Tests</th>
+                        <th style="width:10%; justify-content: right; text-align: right; align-items: right;">Errors</th>
+                        <th style="width:10%; justify-content: right; text-align: right; align-items: right;">Skipped</th>
+                        <th style="width:10%; justify-content: right; text-align: right; align-items: right;">Failures</th>
+                        <th style="width:10%; justify-content: right; text-align: right; align-items: right;">Runtime</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in repo_info %}
+                        <tr>
+                            <td style="word-wrap: break-word;">{{ item["reponame"] }}</td>
+                            <td style="word-wrap: break-word;">{{ item["repolink"] }}</td>
+                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["tests"] }}</td>
+                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["errors"] }}</td>
+                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["skipped"] }}</td>
+                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["failures"] }}</td>
+                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["runtime"] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
         </div>
     </div>
 {% endblock %}

@@ -42,7 +42,20 @@ def git_repors():
 
 @app.route('/unittests')
 def unit_tests():
-    return render_template("unittests.html")
+    repo_info = mongo_reader.fetch_summary()
+    if len(repo_info) > 0:
+        message = f"Found a total of {len(repo_info)} repositories logged in the database."
+        message_type = "SUCCESS"  
+    else:
+        message = f"No repository found in the database."
+        message_type = "WARNING"
+
+    return render_template(
+        template_name_or_list="unittests.html", 
+        message=message,
+        message_type=message_type,
+        repo_info=repo_info
+    )
 
 @app.route('/failures')
 def failures():
