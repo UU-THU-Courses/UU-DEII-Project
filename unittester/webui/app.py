@@ -1,46 +1,42 @@
+# from asyncio import sleep
 import argparse
+
 from flask import (
    Flask,
-   request,
-   jsonify,
-   Markup,
+#    request,
+#    jsonify,
+#    Markup,
+#    Response,
+#    make_response,
    render_template 
 )
+# from flask_socketio import SocketIO
 
-#app = Flask(__name__, template_folder='./templates',static_folder='./static')
 app = Flask(__name__)
 
-@app.route("/")
-def index():
-    return render_template("tabs.html")
+@app.route('/')
+def dashboard():
+    return render_template("index.html", message="This is a success message", message_type="SUCCESS")
 
-@app.route("/accuracy", methods=['POST', 'GET'])
-def accuracy():
-    # if request.method == 'POST':
-    #     r = get_accuracy.delay()
-    #     a = r.get()
-    #     return '<h1>The accuracy is {}</h1>'.format(a)
+@app.route('/queues')
+def queue_status():
+    return render_template("queues.html", message="This is a warning message", message_type="WARNING")
 
-    return '''<form method="POST">
-    <input type="submit">
-    </form>'''
+@app.route('/git-repos')
+def git_repors():
+    return render_template("repos.html", message="This is an alert message")
 
-@app.route("/predictions", methods=['POST', 'GET'])
-def predictions():
-    # if request.method == 'POST':
-    #     results = get_predictions.delay()
-    #     predictions = results.get()
+@app.route('/unittests')
+def unit_tests():
+    return render_template("unittests.html")
 
-    #     results = get_accuracy.delay()
-    #     accuracy = results.get()
-        
-    #     final_results = predictions
+@app.route('/failures')
+def failures():
+    return render_template("failures.html")
 
-    #     return render_template('result.html', accuracy=accuracy ,final_results=final_results) 
-                    
-    return '''<form method="POST">
-    <input type="submit">
-    </form>'''
+@app.route('/cluster')
+def cluster_status():
+    return render_template("cluster.html")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -60,7 +56,7 @@ if __name__ == '__main__':
         "--debug",
         required=False,
         action="store_true",
-        default=False,
+        default=True,
     )
     args = parser.parse_args()
 
