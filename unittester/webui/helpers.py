@@ -1,3 +1,5 @@
+import pika
+import time
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
@@ -7,10 +9,10 @@ class MongodbReader:
         self.client = MongoClient(self.CONNECTION_STRING)
         self.summary_database = summary_database
  
-    def fetch_repositories(self):
+    def fetch_repositories(self, filter=None):
         dbname = self.client[self.summary_database]
         collection_name = dbname["repositories"]
-        documents = collection_name.find(projection={"_id": 0})
+        documents = collection_name.find(filter=filter, projection={"_id": 0})
         response = []
         for document in documents:
             response += [dict(document)]
@@ -39,13 +41,71 @@ class MongodbReader:
         dbname = self.client[self.summary_database]
         collection_name = dbname["maven_error"]
         document = collection_name.find_one(filter={"_id": ObjectId(record_id)}, projection={"_id": 0, "reponame": 1, "repolink": 1, "exception": 1})
-        return dict(document)        
+        return dict(document)
 
-    def __del__(self):
+    def cleanup(self):
         self.client.close()
+    
+    def __del__(self):
+        self.cleanup()
+
+def rabbit_queue_len(host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", queue="gitrepos") -> None:
+    connection = None
+    channel = None
+    while True:
+        try: 
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password), heartbeat=1200))
+            channel = connection.channel()
+            break
+        except:
+            # Sleep for 60 seconds, probably the Rabbit 
+            # service is not up yet.
+            time.sleep(60)
+    
+    # Declare a queue with specified queue name
+    queue_response = channel.queue_declare(queue=queue, durable=True, passive=True)
+    if queue_response: print(queue_response.method.message_count)
+    
+    if channel: channel.close()
+    if connection: connection.close()
+
+    del channel, connection
+    
+    return queue_response.method.message_count
+
+def generate_summary(mongo_reader):
+    response_dict = {
+        "n_process": 0,
+        "n_failure": 0,
+        "n_success": 0,
+        "queue_len": 0 
+    }
+
+    try:    
+        n_process = len(mongo_reader.fetch_repositories(filter = {"status": "Processing"}))
+        n_failure = len(mongo_reader.fetch_repositories(filter = {"status": "Failed"}))
+        n_success = len(mongo_reader.fetch_repositories(filter = {"status": "Success"}))
+        response_dict["n_process"] += n_process
+        response_dict["n_failure"] += n_failure
+        response_dict["n_success"] += n_success
+    except:
+        pass
+
+    try:
+        queue_len = rabbit_queue_len()
+        response_dict["queue_len"] += queue_len
+    except:
+        pass
+
+    return response_dict
+    
 
 # if __name__ == "__main__":
 #     mongo_reader = MongodbReader(host="localhost")
-#     print(mongo_reader.fetch_repositories())
+#     summary = generate_summary(mongo_reader)
+#     print(summary, flush=True)
+#     mongo_reader.cleanup()
 #     del mongo_reader
-#     #exit(0)
+    
+#     import threading
+#     print(threading.enumerate())

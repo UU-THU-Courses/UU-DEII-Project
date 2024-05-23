@@ -9,6 +9,7 @@ from database import CustomMongoDB
 
 
 def normal_processing(received_msg, mongo_db):
+    return_status = ""
     try:
         # Build the command to call the script that
         # downloads git repo and runs maven tests
@@ -33,6 +34,7 @@ def normal_processing(received_msg, mongo_db):
                 runtime=results_dict["runtime"],
                 exception=results_dict["exception"]
             )
+            return_status = "Success"
         else:
             console_file = f"{repo_download_path}/temp-console-output-file.txt"
             if os.path.isfile(console_file):
@@ -46,14 +48,15 @@ def normal_processing(received_msg, mongo_db):
                 repolink=received_msg["html_url"],
                 exception=console_log
             )
+            return_status = "Failed"
 
         # Perform clean up of temporary paths
         if os.path.exists(repo_download_path): shutil.rmtree(repo_download_path)
     
     except Exception as e:
-        return "Failed"
-
-    return "Success"
+        return_status = "Failed"
+    
+    return return_status
 
 def rabbit_callback_func(channel, method, properties, body):
     global mongo_db, repo_download_path

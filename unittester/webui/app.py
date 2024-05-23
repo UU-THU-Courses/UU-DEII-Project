@@ -1,6 +1,6 @@
 import os, io
 import argparse
-from helpers import MongodbReader
+from helpers import MongodbReader, generate_summary
 
 from flask import (
     Flask,
@@ -17,9 +17,10 @@ mongo_reader = MongodbReader()
 def dashboard():
     return render_template("index.html", message="This is a success message", message_type="SUCCESS")
 
-@app.route("/queues")
-def queue_status():
-    return render_template("queues.html", message="This is a warning message", message_type="WARNING")
+@app.route("/summary")
+def queue_summary():
+    summary = generate_summary(mongo_reader=mongo_reader)
+    return render_template("summary.html", message="This is a warning message. -- " + summary.__str__(), message_type="WARNING")
 
 @app.route("/git-repos")
 def git_repors():
@@ -121,7 +122,7 @@ if __name__ == "__main__":
         "--debug",
         required=False,
         action="store_true",
-        default=True,
+        default=False,
     )
     args = parser.parse_args()
 
