@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 class MongodbReader:
     def __init__(self, username="custom_admin", password="custom_passw", host="mongo", port=27017, summary_database="results") -> None:
@@ -24,6 +25,22 @@ class MongodbReader:
             response += [dict(document)]
             response[-1]["runtime"] = round(response[-1]["runtime"], 2)
         return response
+ 
+    def fetch_failures(self):
+        dbname = self.client[self.summary_database]
+        collection_name = dbname["maven_error"]
+        documents = collection_name.find(projection={"_id": 1, "repo": 1, "link": 1})
+        # documents = collection_name.find(projection={"_id": 0, "reponame": 1, "repolink": 1})
+        response = []
+        for document in documents:
+            response += [dict(document)]
+        return response
+
+    def fetch_exception(self, record_id):
+        dbname = self.client[self.summary_database]
+        collection_name = dbname["maven_error"]
+        document = collection_name.find_one(filter={"_id": ObjectId(record_id)}, projection={"_id": 0, "repo": 1, "link": 1, "exception": 1})
+        return dict(document)        
 
     def __del__(self):
         self.client.close()
