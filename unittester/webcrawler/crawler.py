@@ -83,8 +83,12 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    replica = int(env["REPLICA"])
-    max_replicas = int(env["MAX_REPLICA"])
+    env_replica = env["REPLICA"]
+    env_max_rep = env["MAX_REPLICA"]
+    
+    replica = int(env_replica) if env_replica.isnumeric() else 1
+    max_replicas = int(env_max_rep) if env_max_rep.isnumeric() else 1
+
     print(f"I am replica: {replica} of {max_replicas}.")
 
     if args.pulsar:
