@@ -22,8 +22,8 @@
                     <tbody>
                     {% for item in repo_info %}
                         <tr>
-                            <td style="word-wrap: break-word;">{{ item["repo"] }}</td>
-                            <td style="word-wrap: break-word;">{{ item["link"] }}</td>
+                            <td style="word-wrap: break-word;">{{ item["reponame"] }}</td>
+                            <td style="word-wrap: break-word;">{{ item["repolink"] }}</td>
                             <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">
                                 <a href={{ url_for("download_report" , record_id = item['_id']) }}>Download Report</a>
                             </td>

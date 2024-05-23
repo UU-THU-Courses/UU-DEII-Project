@@ -29,8 +29,7 @@ class MongodbReader:
     def fetch_failures(self):
         dbname = self.client[self.summary_database]
         collection_name = dbname["maven_error"]
-        documents = collection_name.find(projection={"_id": 1, "repo": 1, "link": 1})
-        # documents = collection_name.find(projection={"_id": 0, "reponame": 1, "repolink": 1})
+        documents = collection_name.find(projection={"_id": 1, "reponame": 1, "repolink": 1})
         response = []
         for document in documents:
             response += [dict(document)]
@@ -39,7 +38,7 @@ class MongodbReader:
     def fetch_exception(self, record_id):
         dbname = self.client[self.summary_database]
         collection_name = dbname["maven_error"]
-        document = collection_name.find_one(filter={"_id": ObjectId(record_id)}, projection={"_id": 0, "repo": 1, "link": 1, "exception": 1})
+        document = collection_name.find_one(filter={"_id": ObjectId(record_id)}, projection={"_id": 0, "reponame": 1, "repolink": 1, "exception": 1})
         return dict(document)        
 
     def __del__(self):

@@ -81,12 +81,12 @@ def download_report(record_id):
     # Fetch the exception for the requested record
     full_record = mongo_reader.fetch_exception(record_id)
     # Build file path
-    file_name = f"{full_record['repo']}.txt"
+    file_name = f"{full_record['reponame']}.txt"
     file_path = f"/{file_name}"
     # Write the exception to a file for download
     with open(file_path, "w") as outfile:
-        outfile.write(f"Repository  : {full_record['repo']}\n")
-        outfile.write(f"Repo Link   : {full_record['link']}\n\n\n")
+        outfile.write(f"Repository  : {full_record['reponame']}\n")
+        outfile.write(f"Repo Link   : {full_record['repolink']}\n\n\n")
         outfile.write(f"Console Log : \n")
         outfile.write(f"------------- \n\n")
         outfile.write(f"{full_record['exception']}\n")
