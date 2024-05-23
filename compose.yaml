@@ -123,10 +123,12 @@ services:
       - rabbit
       - mongo
     deploy:
-      replicas: 4
+      replicas: 0
       restart_policy:
         condition: on-failure
       placement:
+        constraints:
+          - "node.role==worker"
         max_replicas_per_node: 8
 
 networks:
