@@ -2,56 +2,38 @@
 
 {% block content %}
     <div class="card-header">
-        <h5 class="card-title">Set the initial model</h5>
-        <h6 class="card-subtitle text-muted">{{ message }}</h6>
+        <h5 class="card-title">Discovered Github Repositories</h5>
+        <h6 class="card-subtitle text-muted">
+            Following is the list of github repositories that the webcrawler was able to find and 
+            were taken up for processing by back-end worker containers.
+        </h6>
     </div>
     <div class="card">
         <div class="card-body">
-            {% if not h_latest_model_id %}
-                <form id="seed_upload_form" method="post" action="/models"
-                      enctype="multipart/form-data">
-
-                    <div class="mb-3 row">
-                        <label class="col-form-label col-sm-2 text-sm-right" for="file">File input:
-                        </label>
-                        <div class="col-sm-10">
-                            <input class="form-control" type="file" id="file" name="seed" required>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <div class="col-sm-10 ml-sm-auto">
-                            <button type="submit" class="btn btn-square btn-primary">Upload</button>
-                        </div>
-                    </div>
-                </form>
-            {% else %}
-                <form id="delete_models_form" method="post" action="/delete_model_trail"
-                      enctype="multipart/form-data" style="margin-bottom: 24px;">
-                    <div class="mb-3 row">
-                        <div class="col-sm-10 ml-sm-auto">
-                            <button type="submit" class="btn btn-square btn-danger">Delete models
-                                [{{ model_info|length }}]
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <table class="table">
+                <table class="table" style="table-layout: fixed;">
                     <thead>
                     <tr>
-                        <th style="width:70%;">Model ID</th>
-                        <th style="width:30%">Committed at</th>
+                        <th style="width:20%;">Repository</th>
+                        <th style="width:35%">Link</th>
+                        <th style="width:10%">Stars</th>
+                        <th style="width:10%">Language</th>
+                        <th style="width:10%">Status</th>
+                        <th style="width:15%">Last Update</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for key in model_info.keys() %}
+                    {% for item in repo_info %}
                         <tr>
-                            <td>{{ key }}</td>
-                            <td>{{ model_info[key] }}</td>
+                            <td style="word-wrap: break-word;">{{ item["reponame"] }}</td>
+                            <td style="word-wrap: break-word;">{{ item["repolink"] }}</td>
+                            <td style="word-wrap: break-word;">{{ item["stargazers"] }}</td>
+                            <td style="word-wrap: break-word;">{{ item["language"] }}</td>
+                            <td style="word-wrap: break-word;">{{ item["status"] }}</td>
+                            <td>{{ item["datetime"] }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
-            {% endif %}
         </div>
     </div>
 {% endblock %}

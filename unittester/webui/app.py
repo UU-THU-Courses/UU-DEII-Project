@@ -1,6 +1,6 @@
 # from asyncio import sleep
 import argparse
-
+from helpers import MongodbReader
 from flask import (
    Flask,
 #    request,
@@ -13,6 +13,7 @@ from flask import (
 # from flask_socketio import SocketIO
 
 app = Flask(__name__)
+mongo_reader = MongodbReader()
 
 @app.route('/')
 def dashboard():
@@ -24,7 +25,20 @@ def queue_status():
 
 @app.route('/git-repos')
 def git_repors():
-    return render_template("repos.html", message="This is an alert message")
+    repo_info = mongo_reader.fetch_repositories()
+    if len(repo_info) > 0:
+        message = f"Found a total of {len(repo_info)} repositories logged in the database."
+        message_type = "SUCCESS"  
+    else:
+        message = f"No repository found in the database."
+        message_type = "WARNING"
+    
+    return render_template(
+        template_name_or_list="repos.html", 
+        message=message,
+        message_type=message_type,
+        repo_info=repo_info
+    )
 
 @app.route('/unittests')
 def unit_tests():

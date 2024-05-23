@@ -164,3 +164,4 @@ cython_debug/
 __temp__/
 uppmax-openrc.sh
 UPPMAX 2024_1-4-openrc.sh
+mongo-compose.yaml
