@@ -35,6 +35,9 @@ services:
       replicas: 0
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - "node.role==manager"
 
   mongo:
     hostname: mongo
@@ -54,6 +57,9 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - "node.role==manager"
 
   mongo-express:
     image: mongo-express:latest
@@ -113,6 +119,9 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - "node.role==manager"
 
   worker:
     image: 127.0.0.1:5000/worker
