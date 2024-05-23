@@ -57,8 +57,8 @@ class CustomMongoDB:
         dbname = self.client[self.summary_database]
         collection_name = dbname["maven_error"]
         data_item = {
-            "repo": reponame,
-            "link": repolink,
+            "reponame": reponame,
+            "repolink": repolink,
             "exception": exception,
             "datetime": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }        
@@ -68,8 +68,8 @@ class CustomMongoDB:
         dbname = self.client[self.summary_database]
         collection_name = dbname["test-details"]
         data_item = {
-            "repo": reponame,
-            "link": repolink,
+            "reponame": reponame,
+            "repolink": repolink,
             "tests": tests,
             "errors": errors,
             "skipped": skipped,
