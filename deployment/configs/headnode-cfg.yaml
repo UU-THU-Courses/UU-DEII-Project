@@ -52,8 +52,9 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
-  - printf "\n\nObtain swarm token ...\n"
-  - docker swarm join-token worker -q > /swarm-token.txt
+  - printf "\n\nObtain swarm tokens ...\n"
+  - docker swarm join-token worker -q > /swarm-worker-token.txt
+  - docker swarm join-token manager -q > /swarm-manager-token.txt
 
   - printf "..."
   - printf "\n=========================================================================================================\n"

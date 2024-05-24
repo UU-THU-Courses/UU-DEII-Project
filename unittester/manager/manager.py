@@ -16,7 +16,7 @@ app = Flask(__name__)
 def send_token():
     if request.method == "GET":
         # Read the latest swarm token
-        with open("/swarm-token.txt", "r") as f:
+        with open("/swarm-worker-token.txt", "r") as f:
             token = f.readline().strip()
         # request.args contains any desired 
         # parameters sent from the worker node
@@ -48,23 +48,72 @@ def drain_node():
     else:
         return Response("Only POST available!", 400)
 
-@app.route("/swarm-summary", methods=["GET"])
-def swarm_summary():
+@app.route("/summary", methods=["GET"])
+def cluster_summary():
     if request.method == "GET":
         # Read the latest swarm token
-        with open("/swarm-token.txt", "r") as f:
-            token = f.readline().strip()
-        # need the follow information:
-        # HEAD IP : HEAD NAME : CONTAINERS ON HEAD
-        # WORK IP : WORK NAME : CONTAINERS ON WORK
+        with open("/swarm-worker-token.txt", "r") as f:
+            worker_token = f.readline().strip()
+        with open("/swarm-manager-token.txt", "r") as f:
+            manager_token = f.readline().strip()
 
-        # request.args contains any desired 
-        # parameters sent from the worker node
-        data_dict = { 
-            "swarm-token": token, 
-            "manager-port": 2377 
+        # Build response dictionary
+        response_dict = { 
+            "summary": {
+                "n_nodes": 0,
+                "managers": 0,
+                "workers": 0,
+                "manager_token": manager_token,
+                "worker_token": worker_token,                
+            }, 
+            "node_info": []
         }
-        return Response(json.dumps(data_dict), 200)
+
+        # Generate a random identifier
+        identifier = random.randint(1000,9999)
+
+        # Generate and fetch results of docker node inspect
+        temp_dump_file = f"/temp_{identifier}_node_inspect.json"
+        with open(temp_dump_file, "w") as outfile:
+            subprocess.call(["docker node inspect $(docker node ls -q)"], shell=True, stdout=outfile)
+        with open(temp_dump_file, "r") as jsonfile:
+            json_object = json.load(jsonfile)
+        os.remove(temp_dump_file)
+
+        for item in json_object:
+            response_dict["summary"]["n_nodes"] += 1
+            if item["Spec"]["Role"] == "manager": response_dict["summary"]["managers"] += 1
+            if item["Spec"]["Role"] == "worker": response_dict["summary"]["workers"] += 1
+                
+            temp_node = {
+                "name": item["Description"]["Hostname"].upper(),
+                "role": item["Spec"]["Role"].upper(),
+                "addr": item["Status"]["Addr"].upper(),
+                "status": item["Status"]["State"].upper(),
+                "n_containers": 0,
+                "containers": [],                
+            }
+
+            # Find containers on current node
+            temp_dump_file_2 = f"/temp_{identifier}_node_inspect.json"
+            with open(temp_dump_file_2, "w") as outfile:
+                subprocess.call([f"docker node ps {item['Description']['Hostname']} --format json"], shell=True, stdout=outfile)
+            with open(temp_dump_file_2, "r") as jsonfile: 
+                containers = [json.loads(obj) for obj in jsonfile.read().splitlines()]
+            os.remove(temp_dump_file_2)            
+            
+            for container in containers:
+                temp_node["n_containers"] += 1
+                temp_node["containers"] += [{
+                    "name": container["Name"],
+                    "image": container["Image"],
+                    "status": container["DesiredState"],
+                    "error": container["Error"],
+                }]
+            
+            response_dict["node_info"] += [temp_node]
+
+        return Response(json.dumps(response_dict), 200)
     else:
         return Response("Only GET available!", 400)
 
