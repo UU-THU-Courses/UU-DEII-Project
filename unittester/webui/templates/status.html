@@ -51,13 +51,13 @@
                             <table class="table" style="width: 98%; table-layout: fixed;">
                                 <tr>
                                     {% if item["availability"] == 'ACTIVE' %}
-                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-active"></div></th>
+                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-active"><h4 class="inner-text">{{ item["role"] }}</h4></div></th>
                                     {% elif item["availability"] == 'DRAIN' %}
-                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-drain"></div></th>
+                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-drain"><h4 class="inner-text">{{ item["role"] }}</h4></div></th>
                                     {% else %}
-                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"></div></th>
+                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"><h4 class="inner-text">TEX{{ item["role"] }}T3</h4></div></th>
                                     {% endif %}
-                                    <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th>
+                                    <!-- <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th> -->
                                     <th style="width: 25%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["addr"] }}</h4></th>
                                     <th style="width: 10%; text-align: left; vertical-align: middle;"><h4>{{ item["availability"] }}</h4></th>
@@ -134,6 +134,9 @@
         border-radius: 50%;
         margin: 0px;
         transition: background 500ms;
+    }
+    .inner-text {
+        padding-left: 20px;
     }
     .expandable {
         height: 35px;
