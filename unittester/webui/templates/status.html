@@ -51,7 +51,7 @@
                             <table class="table" style="width: 98%; table-layout: fixed;">
                                 <tr>
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th>
-                                    <th style="width: 25%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>
+                                    <th style="width: 30%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["addr"] }}</h4></th>
                                     {% if item["availability"] == 'ACTIVE' %}
                                     <th style="width:  20px; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb bulb-active"></div></th>
@@ -61,7 +61,7 @@
                                     <th style="width:  20px; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"></div></th>
                                     {% endif %}
                                     <th style="width: 15%; text-align: right; vertical-align: middle;"><h4>{{ item["availability"] }}</h4></th>
-                                    <th style="width: 18%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
+                                    <th style="width: 15%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
                                 </tr>
                             </table>            
                         </td>
@@ -73,15 +73,19 @@
                 <table class="table" style="table-layout: fixed;">
                     <thead>
                     <tr>
-                        <th style="width:50%;">Container Name</th>
-                        <th style="width:50%">Container Status</th>
+                        <th style="width: 25%;">Container Name</th>
+                        <th style="width: 25%;">Container Image</th>
+                        <th style="width: 25%;">Container Status</th>
+                        <th style="width: 25%;">Error</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for container in item["containers"] %}
                         <tr>
                             <td style="word-wrap: break-word;">{{ container["name"] }}</td>
+                            <td style="word-wrap: break-word;">{{ container["image"] }}</td>
                             <td style="word-wrap: break-word;">{{ container["status"] }}</td>
+                            <td style="word-wrap: break-word;">{{ container["error"] }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
