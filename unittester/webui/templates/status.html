@@ -50,35 +50,17 @@
                         <td style="width: 100%;">
                             <table class="table" style="width: 98%; table-layout: fixed;">
                                 <tr>
+                                    {% if item["availability"] == 'ACTIVE' %}
+                                    <th style="width:  2%; justify-content: right; text-align: right; align-items: right; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-active"></div></th>
+                                    {% elif message_type == 'DRAIN' %}
+                                    <th style="width:  2%; justify-content: right; text-align: right; align-items: right; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-drain"></div></th>
+                                    {% else %}
+                                    <th style="width:  2%; justify-content: right; text-align: right; align-items: right; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"></div></th>
+                                    {% endif %}
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th>
                                     <th style="width: 25%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["addr"] }}</h4></th>
-                                    <th style="width:  2%; justify-content: right; text-align: right; align-items: right; vertical-align: middle;"><div id="bulb-{{ loop.index0 }}" class="bulb">
-                                        <script type="text/javascript">
-                                            var counter = 2;
-                                            var timerId = 0;
-                                            function autoflash(blub_id) {
-                                                timerId = setInterval(timer, 500, blub_id);
-                                            };
-                                            function timer(blub_id) {
-                                                if (counter == 1) {
-                                                    const idArray = blub_id.split("-");
-                                                    var avail = document.getElementById("avail-" + idArray[1]);
-                                                    var color = "red";
-                                                    if (avail.innerText === "ACTIVE") color = "green";
-                                                    document.getElementById(blub_id).style.backgroundColor = color;
-                                                }
-                                                if (counter == 2) {
-                                                    document.getElementById(blub_id).style.backgroundColor = "#1111117d";
-                                                }
-                                                counter++
-                                                if (counter > 2) counter = 1;
-                                                clearInterval(timerId);
-                                            }
-                                            autoflash("bulb-{{ loop.index0 }}");
-                                        </script>
-                                    </div></h4></th>
-                                    <th style="width: 15%; text-align: left; vertical-align: middle;"><h4 id="avail-{{ loop.index0 }}">{{ item["availability"] }}</h4></th>
+                                    <th style="width: 15%; text-align: left; vertical-align: middle;"><h4>{{ item["availability"] }}</h4></th>
                                     <th style="width: 18%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
                                 </tr>
                             </table>            
@@ -130,9 +112,25 @@
 </script>
 <style>
     .bulb {
-        height: 10px;
-        width: 10px;
+        height: 20px;
+        width: 20px;
         background-color: #1111117d;
+        border-radius: 50%;
+        margin: 0px;
+        transition: background 500ms;
+    }
+    .bulb-active {
+        height: 20px;
+        width: 20px;
+        background-color: green;
+        border-radius: 50%;
+        margin: 0px;
+        transition: background 500ms;
+    }
+    .bulb-drain {
+        height: 20px;
+        width: 20px;
+        background-color: red;
         border-radius: 50%;
         margin: 0px;
         transition: background 500ms;
