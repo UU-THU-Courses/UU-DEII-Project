@@ -54,11 +54,11 @@
                                     <th style="width: 25%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["addr"] }}</h4></th>
                                     {% if item["availability"] == 'ACTIVE' %}
-                                    <th style="width:  2%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-active"></div></th>
+                                    <th style="width:  20px; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb bulb-active"></div></th>
                                     {% elif item["availability"] == 'DRAIN' %}
-                                    <th style="width:  2%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-drain"></div></th>
+                                    <th style="width:  20px; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb bulb-drain"></div></th>
                                     {% else %}
-                                    <th style="width:  2%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"></div></th>
+                                    <th style="width:  20px; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"></div></th>
                                     {% endif %}
                                     <th style="width: 15%; text-align: right; vertical-align: middle;"><h4>{{ item["availability"] }}</h4></th>
                                     <th style="width: 18%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
@@ -114,12 +114,19 @@
     .bulb {
         height: 15px;
         width: 15px;
-        background-color: #1111117d;
-        border-radius: 50%;
         margin: 0px;
+        padding-top: 2px;
+        border-radius: 50%;
         transition: background 500ms;
+        background-color: #1111117d;
     }
     .bulb-active {
+        background-color: green;
+    }
+    .bulb-drain {
+        background-color: red;
+    }
+    /* .bulb-active {
         height: 15px;
         width: 15px;
         background-color: green;
@@ -134,7 +141,7 @@
         border-radius: 50%;
         margin: 0px;
         transition: background 500ms;
-    }
+    } */
     .expandable {
         height: 35px;
         width: 35px;
