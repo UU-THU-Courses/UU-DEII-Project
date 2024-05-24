@@ -91,7 +91,6 @@ services:
     build: ./unittester/webui
     ports:
       - "5100:5100"
-      - "5200:5200"
     networks:
       - frontend
     depends_on:
