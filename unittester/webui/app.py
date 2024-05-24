@@ -7,7 +7,6 @@ from flask import (
     request,
     send_file,
     render_template,
-    after_this_request
 )
 
 app = Flask(__name__)

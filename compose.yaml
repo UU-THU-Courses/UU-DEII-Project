@@ -91,6 +91,11 @@ services:
     build: ./unittester/webui
     ports:
       - "5100:5100"
+      - target: 5200
+        host_ip: 127.0.0.1
+        published: "5200"
+        protocol: tcp
+        mode: host
     networks:
       - frontend
     depends_on:
