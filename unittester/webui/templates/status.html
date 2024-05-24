@@ -61,10 +61,16 @@
                                                 timerId = setInterval(timer, 500, blub_id);
                                             };
                                             function timer(blub_id) {
-                                                if (counter == 1)
-                                                    document.getElementById(blub_id).style.backgroundColor = "green";
-                                                if (counter == 2)
+                                                if (counter == 1) {
+                                                    const idArray = blub_id.split("-");
+                                                    var avail = document.getElementById("avail-" + idArray[1]);
+                                                    var color = "red";
+                                                    if (avail.innerText === "ACTIVE") color = "green";
+                                                    document.getElementById(blub_id).style.backgroundColor = color;
+                                                }
+                                                if (counter == 2) {
                                                     document.getElementById(blub_id).style.backgroundColor = "#1111117d";
+                                                }
                                                 counter++
                                                 if (counter > 2) counter = 1;
                                                 clearInterval(timerId);
@@ -72,7 +78,7 @@
                                             autoflash("bulb-{{ loop.index0 }}");
                                         </script>
                                     </div></h4></th>
-                                    <th style="width: 15%; text-align: left; vertical-align: middle;"><h4>{{ item["availability"] }}</h4></th>
+                                    <th style="width: 15%; text-align: left; vertical-align: middle;"><h4 id="avail-{{ loop.index0 }}">{{ item["availability"] }}</h4></th>
                                     <th style="width: 18%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
                                 </tr>
                             </table>            
