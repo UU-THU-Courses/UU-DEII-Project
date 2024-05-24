@@ -77,7 +77,7 @@
                                 </tr>
                             </table>            
                         </td>
-                        <td style="width: 4%; text-align: center; align-items: center;"><button id="button-{{ loop.index0 }}" onclick="toggle_display(this.id);" data-feather="plus" class="expandable"></button></td>
+                        <td style="width: 4%; text-align: center; align-items: center;"><button id="button-0" class="expandable" onclick="toggle_display(this.id);" ><i data-feather="plus" style="display: block;"></i><i data-feather="minus" style="display: none;"></i></button></td>
                     </tr>
                 </table>
             </div>
@@ -108,13 +108,17 @@
         const idArray = btn_id.split("-");
         var btn = document.getElementById(btn_id);
         var body = document.getElementById("body-" + idArray[1]);
+        var item = $(btn).find('svg');
+
         if (body.style.display === "none") {
             body.style.display = "block";
-            btn.data_feature="minus"
+            item[0].style.display = "none";
+            item[1].style.display = "block";
         }
         else {
             body.style.display = "none";
-            btn.data_feature="plus"
+            item[0].style.display = "block";
+            item[1].style.display = "none";
         }
     };
 </script>
