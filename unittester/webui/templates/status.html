@@ -50,18 +50,17 @@
                         <td style="width: 100%;">
                             <table class="table" style="width: 98%; table-layout: fixed;">
                                 <tr>
-                                    {% if item["availability"] == 'ACTIVE' %}
-                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-active"><h4 class="inner-text">{{ item["role"] }}</h4></div></th>
-                                    {% elif item["availability"] == 'DRAIN' %}
-                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-drain"><h4 class="inner-text">{{ item["role"] }}</h4></div></th>
-                                    {% else %}
-                                    <th style="width:  5%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"><h4 class="inner-text">{{ item["role"] }}</h4></div></th>
-                                    {% endif %}
-                                    <!-- <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th> -->
+                                    <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th>
                                     <th style="width: 25%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["addr"] }}</h4></th>
-                                    <th style="width: 10%; text-align: left; vertical-align: middle;"><h4>{{ item["availability"] }}</h4></th>
-                                    <th style="width: 18%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
+                                    {% if item["availability"] == 'ACTIVE' %}
+                                    <th style="width:  20%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-active"><h4 class="inner-text">{{ item["availability"] }}</h4></div></th>
+                                    {% elif item["availability"] == 'DRAIN' %}
+                                    <th style="width:  20%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-drain"><h4 class="inner-text">{{ item["availability"] }}</h4></div></th>
+                                    {% else %}
+                                    <th style="width:  20%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"><h4 class="inner-text">{{ item["availability"] }}</h4></div></th>
+                                    {% endif %}
+                                    <th style="width: 15%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
                                 </tr>
                             </table>            
                         </td>
