@@ -89,7 +89,8 @@ def cluster_summary():
                 "name": item["Description"]["Hostname"].upper(),
                 "role": item["Spec"]["Role"].upper(),
                 "addr": item["Status"]["Addr"].upper(),
-                "status": item["Status"]["State"].upper(),
+                "state": item["Status"]["State"].upper(),
+                "availability": item["Spec"]["Availability"].upper(),
                 "n_containers": 0,
                 "containers": [],                
             }

@@ -102,18 +102,7 @@ def generate_summary(mongo_reader):
 
 def fetch_cluster_info():
     cluster_info = dict()
-    response = requests.get(f"http://localhost:5200/summary", timeout = 180)
+    response = requests.get(f"http://host.docker.internal:5200/summary", timeout = 180)
     status_code = response.status_code
-    print(status_code)
     if status_code == 200: cluster_info = response.json()
     return cluster_info    
-
-# if __name__ == "__main__":
-#     mongo_reader = MongodbReader(host="localhost")
-#     summary = generate_summary(mongo_reader)
-#     print(summary, flush=True)
-#     mongo_reader.cleanup()
-#     del mongo_reader
-    
-#     import threading
-#     print(threading.enumerate())

@@ -9,29 +9,29 @@
         <table class="table">
             <tbody>
             <tr>
-                <th style="width:50%; justify-content: left; text-align: left; align-items: left;"># of Cluster Nodes</th>
+                <th style="width:30%; justify-content: left; text-align: left; align-items: left;"># of Cluster Nodes</th>
                 <th>:</th>
-                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["n_nodes"] }}</td>
+                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["n_nodes"] }}</td>
             </tr>
             <tr>
-                <th style="width:50%; justify-content: left; text-align: left; align-items: left;"># of Swarm Managers</th>
+                <th style="width:30%; justify-content: left; text-align: left; align-items: left;"># of Swarm Managers</th>
                 <th>:</th>
-                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["managers"] }}</td>
+                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["managers"] }}</td>
             </tr>
             <tr>
-                <th style="width:50%; justify-content: left; text-align: left; align-items: left;"># of Swarm Workers</th>
+                <th style="width:30%; justify-content: left; text-align: left; align-items: left;"># of Swarm Workers</th>
                 <th>:</th>
-                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["workers"] }}</td>
+                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["workers"] }}</td>
             </tr>
             <tr>
-                <th style="width:50%; justify-content: left; text-align: left; align-items: left;">Swarm Manager Token</th>
+                <th style="width:30%; justify-content: left; text-align: left; align-items: left;">Swarm Manager Token</th>
                 <th>:</th>
-                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["manager_token"] }}</td>
+                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["manager_token"] }}</td>
             </tr>
             <tr>
-                <th style="width:50%; justify-content: left; text-align: left; align-items: left;">Swarm Worker Token</th>
+                <th style="width:30%; justify-content: left; text-align: left; align-items: left;">Swarm Worker Token</th>
                 <th>:</th>
-                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["worker_token"] }}</td>
+                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["worker_token"] }}</td>
             </tr>
             </tbody>
         </table>
@@ -72,7 +72,7 @@
                                             autoflash("bulb-{{ loop.index0 }}");
                                         </script>
                                     </div></h4></th>
-                                    <th style="width: 15%; text-align: left; vertical-align: middle;"><h4>{{ item["status"] }}</h4></th>
+                                    <th style="width: 15%; text-align: left; vertical-align: middle;"><h4>{{ item["availability"] }}</h4></th>
                                     <th style="width: 18%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
                                 </tr>
                             </table>            
@@ -104,14 +104,17 @@
     </div>
 </div>
 <script>
-    function toggle_display(block_id) {
-        const idArray = block_id.split("-");
-        var T = document.getElementById("body-" + idArray[1]);
-        if (T.style.display === "none") {
-            T.style.display = "block";
+    function toggle_display(btn_id) {
+        const idArray = btn_id.split("-");
+        var btn = document.getElementById(btn_id);
+        var body = document.getElementById("body-" + idArray[1]);
+        if (body.style.display === "none") {
+            body.style.display = "block";
+            btn.data_feature="minus"
         }
         else {
-            T.style.display = "none";
+            body.style.display = "none";
+            btn.data_feature="plus"
         }
     };
 </script>
