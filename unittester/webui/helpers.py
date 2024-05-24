@@ -98,7 +98,101 @@ def generate_summary(mongo_reader):
         pass
 
     return response_dict
-    
+
+def fetch_cluster_info():
+    cluster_info = {
+        "summary": {
+            "n_nodes": 4,
+            "managers": 1,
+            "workers": 3,
+            "manager_token": "XYZABC_MANAGER_TOKEN",
+            "worker_token": "XYZABC_Worker_TOKEN",
+        },
+        "node_info": [
+            {
+                "name": "uz-1234-headnode",
+                "role": "MANAGER",
+                "addr": "192.168.111.111",
+                "status": "Active",
+                "n_containers": 2,
+                "containers": [
+                    {
+                        "name": "container1",
+                        "status": "Working",
+                    },
+                    {
+                        "name": "container2",
+                        "status": "Working",
+                    },
+                ],
+            },
+            {
+                "name": "uz-1234-worknode1",
+                "role": "WORKER",
+                "addr": "192.168.1.2",
+                "status": "Active",
+                "n_containers": 2,
+                "containers": [
+                    {
+                        "name": "container1",
+                        "status": "Working",
+                    },
+                    {
+                        "name": "container2",
+                        "status": "Working",
+                    },
+                ],
+            },
+            {
+                "name": "node3",
+                "role": "Worker",
+                "addr": "192.168.1.3",
+                "status": "Active",
+                "n_containers": 4,
+                "containers": [
+                    {
+                        "name": "container1",
+                        "status": "Working",
+                    },
+                    {
+                        "name": "container2",
+                        "status": "Working",
+                    },
+                    {
+                        "name": "container3",
+                        "status": "Working",
+                    },
+                    {
+                        "name": "container4",
+                        "status": "Working",
+                    },
+                ],
+            },
+            {
+                "name": "node4",
+                "role": "Worker",
+                "addr": "192.168.1.4",
+                "status": "Active",
+                "n_containers": 3,
+                "containers": [
+                    {
+                        "name": "container1",
+                        "status": "Working",
+                    },
+                    {
+                        "name": "container2",
+                        "status": "Working",
+                    },
+                    {
+                        "name": "container3",
+                        "status": "Working",
+                    },
+                ],
+            }
+        ]
+    }
+
+    return cluster_info    
 
 # if __name__ == "__main__":
 #     mongo_reader = MongodbReader(host="localhost")

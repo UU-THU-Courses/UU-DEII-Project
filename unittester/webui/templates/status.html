@@ -1,0 +1,135 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>Summary</h1>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th style="width:50%; justify-content: left; text-align: left; align-items: left;"># of Cluster Nodes</th>
+                <th>:</th>
+                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["n_nodes"] }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%; justify-content: left; text-align: left; align-items: left;"># of Swarm Managers</th>
+                <th>:</th>
+                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["managers"] }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%; justify-content: left; text-align: left; align-items: left;"># of Swarm Workers</th>
+                <th>:</th>
+                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["workers"] }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%; justify-content: left; text-align: left; align-items: left;">Swarm Manager Token</th>
+                <th>:</th>
+                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["manager_token"] }}</td>
+            </tr>
+            <tr>
+                <th style="width:50%; justify-content: left; text-align: left; align-items: left;">Swarm Worker Token</th>
+                <th>:</th>
+                <td style="width:25%; justify-content: left; text-align: left; align-items: left;">{{ summary["worker_token"] }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h1>Swarm Nodes</h1>
+    </div>
+    <div class="card-body">
+        {% for item in node_info %}
+        <div class="card">
+            <div class="card-header">
+                <table style="width: 100%; table-layout: fixed;">
+                    <tr>
+                        <td style="width: 100%;">
+                            <table class="table" style="width: 98%; table-layout: fixed;">
+                                <tr>
+                                    <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th>
+                                    <th style="width: 25%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>
+                                    <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["addr"] }}</h4></th>
+                                    <th style="width:  2%; justify-content: right; text-align: right; align-items: right; vertical-align: middle;"><div id="bulb-{{ loop.index0 }}" class="bulb">
+                                        <script type="text/javascript">
+                                            var counter = 2;
+                                            var timerId = 0;
+                                            function autoflash(blub_id) {
+                                                timerId = setInterval(timer, 500, blub_id);
+                                            };
+                                            function timer(blub_id) {
+                                                if (counter == 1)
+                                                    document.getElementById(blub_id).style.backgroundColor = "green";
+                                                if (counter == 2)
+                                                    document.getElementById(blub_id).style.backgroundColor = "#1111117d";
+                                                counter++
+                                                if (counter > 2) counter = 1;
+                                                clearInterval(timerId);
+                                            }
+                                            autoflash("bulb-{{ loop.index0 }}");
+                                        </script>
+                                    </div></h4></th>
+                                    <th style="width: 15%; text-align: left; vertical-align: middle;"><h4>{{ item["status"] }}</h4></th>
+                                    <th style="width: 18%; text-align: right; vertical-align: middle;"><h4>{{ item["n_containers"] }} containers</h4></th>
+                                </tr>
+                            </table>            
+                        </td>
+                        <td style="width: 4%; text-align: center; align-items: center;"><button id="button-{{ loop.index0 }}" onclick="toggle_display(this.id);" data-feather="plus" class="expandable"></button></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="body-{{ loop.index0 }}" class="card-body" style="display:none">
+                <table class="table" style="table-layout: fixed;">
+                    <thead>
+                    <tr>
+                        <th style="width:50%;">Container Name</th>
+                        <th style="width:50%">Container Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for container in item["containers"] %}
+                        <tr>
+                            <td style="word-wrap: break-word;">{{ container["name"] }}</td>
+                            <td style="word-wrap: break-word;">{{ container["status"] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}        
+    </div>
+</div>
+<script>
+    function toggle_display(block_id) {
+        const idArray = block_id.split("-");
+        var T = document.getElementById("body-" + idArray[1]);
+        if (T.style.display === "none") {
+            T.style.display = "block";
+        }
+        else {
+            T.style.display = "none";
+        }
+    };
+</script>
+<style>
+    .bulb {
+        height: 10px;
+        width: 10px;
+        background-color: #1111117d;
+        border-radius: 50%;
+        margin: 0px;
+        transition: background 500ms;
+    }
+    .expandable {
+        height: 35px;
+        width: 35px;
+        background-color: #11111110;
+        border-radius: 25%;
+        margin: 5px;
+    }
+</style>
+{% endblock %}

@@ -48,6 +48,26 @@ def drain_node():
     else:
         return Response("Only POST available!", 400)
 
+@app.route("/swarm-summary", methods=["GET"])
+def swarm_summary():
+    if request.method == "GET":
+        # Read the latest swarm token
+        with open("/swarm-token.txt", "r") as f:
+            token = f.readline().strip()
+        # need the follow information:
+        # HEAD IP : HEAD NAME : CONTAINERS ON HEAD
+        # WORK IP : WORK NAME : CONTAINERS ON WORK
+
+        # request.args contains any desired 
+        # parameters sent from the worker node
+        data_dict = { 
+            "swarm-token": token, 
+            "manager-port": 2377 
+        }
+        return Response(json.dumps(data_dict), 200)
+    else:
+        return Response("Only GET available!", 400)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(

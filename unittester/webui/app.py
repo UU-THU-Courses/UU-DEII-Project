@@ -1,6 +1,6 @@
 import os, io
 import argparse
-from helpers import MongodbReader, generate_summary
+from helpers import MongodbReader, generate_summary, fetch_cluster_info
 
 from flask import (
     Flask,
@@ -80,9 +80,11 @@ def failures():
         refresh=True,
     )
 
-@app.route("/cluster")
+@app.route("/status")
 def cluster_status():
-    return render_template("cluster.html")
+    # Build test node info
+    cluster_info = fetch_cluster_info()
+    return render_template("status.html", node_info=cluster_info["node_info"], summary=cluster_info["summary"])
 
 @app.route("/download-report/<record_id>")
 def download_report(record_id):
@@ -129,7 +131,7 @@ if __name__ == "__main__":
         "--debug",
         required=False,
         action="store_true",
-        default=False,
+        default=True,
     )
     args = parser.parse_args()
 
