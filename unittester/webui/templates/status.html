@@ -51,11 +51,11 @@
                             <table class="table" style="width: 98%; table-layout: fixed;">
                                 <tr>
                                     {% if item["availability"] == 'ACTIVE' %}
-                                    <th style="width:  2%; justify-content: right; text-align: right; align-items: right; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-active"></div></th>
-                                    {% elif message_type == 'DRAIN' %}
-                                    <th style="width:  2%; justify-content: right; text-align: right; align-items: right; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-drain"></div></th>
+                                    <th style="width:  2%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-active"></div></th>
+                                    {% elif item["availability"] == 'DRAIN' %}
+                                    <th style="width:  2%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb-drain"></div></th>
                                     {% else %}
-                                    <th style="width:  2%; justify-content: right; text-align: right; align-items: right; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"></div></th>
+                                    <th style="width:  2%; justify-content: center; text-align: center; align-items: center; vertical-align: top;"><div id="bulb-{{ loop.index0 }}" class="bulb"></div></th>
                                     {% endif %}
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th>
                                     <th style="width: 25%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>

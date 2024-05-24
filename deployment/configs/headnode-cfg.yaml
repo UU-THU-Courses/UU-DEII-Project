@@ -100,4 +100,4 @@ runcmd:
   - printf "\n=========================================================================================================\n"
   - printf "\n=========================================================================================================\n"
   - printf "\n\nDeploy the application stack on swarm ...\n"
-  - docker stack deploy --compose-file /project/compose.yaml unittester
+  - docker stack deploy --compose-file /project/compose.yaml unittester --detach=true
