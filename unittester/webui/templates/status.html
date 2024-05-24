@@ -9,29 +9,29 @@
         <table class="table">
             <tbody>
             <tr>
-                <th style="width:30%; justify-content: left; text-align: left; align-items: left;"># of Cluster Nodes</th>
+                <th style="width:25%; justify-content: left; text-align: left; align-items: left;"># of Cluster Nodes</th>
                 <th>:</th>
-                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["n_nodes"] }}</td>
+                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["n_nodes"] }}</td>
             </tr>
             <tr>
-                <th style="width:30%; justify-content: left; text-align: left; align-items: left;"># of Swarm Managers</th>
+                <th style="width:25%; justify-content: left; text-align: left; align-items: left;"># of Swarm Managers</th>
                 <th>:</th>
-                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["managers"] }}</td>
+                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["managers"] }}</td>
             </tr>
             <tr>
-                <th style="width:30%; justify-content: left; text-align: left; align-items: left;"># of Swarm Workers</th>
+                <th style="width:25%; justify-content: left; text-align: left; align-items: left;"># of Swarm Workers</th>
                 <th>:</th>
-                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["workers"] }}</td>
+                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["workers"] }}</td>
             </tr>
             <tr>
-                <th style="width:30%; justify-content: left; text-align: left; align-items: left;">Swarm Manager Token</th>
+                <th style="width:25%; justify-content: left; text-align: left; align-items: left;">Swarm Manager Token</th>
                 <th>:</th>
-                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["manager_token"] }}</td>
+                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["manager_token"] }}</td>
             </tr>
             <tr>
-                <th style="width:30%; justify-content: left; text-align: left; align-items: left;">Swarm Worker Token</th>
+                <th style="width:25%; justify-content: left; text-align: left; align-items: left;">Swarm Worker Token</th>
                 <th>:</th>
-                <td style="width:65%; justify-content: left; text-align: left; align-items: left;">{{ summary["worker_token"] }}</td>
+                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["worker_token"] }}</td>
             </tr>
             </tbody>
         </table>
@@ -50,7 +50,7 @@
                         <td style="width: 100%;">
                             <table class="table" style="width: 98%; table-layout: fixed;">
                                 <tr>
-                                    <th style="width: 50px; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th>
+                                    <th style="width: 100px; text-align: left; vertical-align: middle;"><h4>{{ item["role"] }}</h4></th>
                                     <th style="width: 30%; text-align: left; vertical-align: middle;"><h4>{{ item["name"] }}</h4></th>
                                     <th style="width: 20%; text-align: left; vertical-align: middle;"><h4>{{ item["addr"] }}</h4></th>
                                     {% if item["availability"] == 'ACTIVE' %}
