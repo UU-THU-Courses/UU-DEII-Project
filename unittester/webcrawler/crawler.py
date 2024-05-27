@@ -5,11 +5,28 @@ from os import environ as env
 from search_github import GitHubAPI
 
 # Declare few paths
-MAX_PAGES   = 500
+MAX_PAGES   = 10
 PER_PAGE    = 100
 
 with open("/crawlerdata/GITHUB_ACCESS_TOKEN.txt", "r") as f:
     GITHUB_ACCESS_TOKEN = f.read().strip()
+
+
+def wait_search_limit_reset(api_search):
+    """Wait 1 minute for search limit to reset"""
+    while True:
+        rate_limit = api_search.check_rate_limit()["resources"]["search"]
+        if rate_limit["limit"] > rate_limit["used"]: 
+            break
+        time.sleep(60)
+
+def wait_core_limit_reset(api_search):
+    """Wait 1 hour for the core limit to reset"""
+    while True:
+        rate_limit = api_search.check_rate_limit()["resources"]["core"]
+        if rate_limit["limit"] > rate_limit["used"]: 
+            break
+        time.sleep(3600)
 
 def rabbit_crawler(producer_queue, replica, max_replicas):
     # Create a producer instance
@@ -21,23 +38,23 @@ def rabbit_crawler(producer_queue, replica, max_replicas):
         results_per_page=PER_PAGE,
     )
 
-    # Search github using API for valid 
-    # repositories, using batches
-    for page in range(replica, MAX_PAGES+1, max_replicas):
-        try:
-            discovered_repos = api_search.perform_search(page_num=page)
+    for sortby in [None, "stars", "forks", "updated"]:
+        for sortorder in ["desc", "asc"]:
+            # Search github using API for valid repositories, using batches
+            for page in range(replica-1, MAX_PAGES+1, max_replicas):
+                try:
+                    wait_search_limit_reset()
+                    discovered_repos = api_search.perform_search(page_num=page)
 
-            # Go through each discovered repository
-            # and validate that it contains pom.xml
-            for item in discovered_repos:
-                if api_search.validity_check(url = item["url"]):
-                    prod.publish(message=json.dumps(obj = item))
+                    # Go through each discovered repository
+                    # and validate that it contains pom.xml
+                    for item in discovered_repos:
+                        wait_core_limit_reset()
+                        if api_search.validity_check(url = item["url"]):
+                            prod.publish(message=json.dumps(obj = item))
 
-            # Sleep between batches
-            if (page * PER_PAGE) % 1000 == 0: time.sleep(60)
-        
-        except Exception as e:
-            pass
+                except Exception as e:
+                    pass
 
     del prod
 

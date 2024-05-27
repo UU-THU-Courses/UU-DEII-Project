@@ -88,7 +88,7 @@ def rabbit_callback_func(channel, method, properties, body):
             repolink=received_msg["html_url"],
             updates={"status": return_status}
         )
-    elif attempts < 10:
+    elif attempts < 10 and status != "Success":
         # Update the attempts counter by 1
         # and then proceed as normal
         mongo_db.update_gitrepo(

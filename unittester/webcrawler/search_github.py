@@ -1,37 +1,6 @@
 import os
 import requests
 
-verbose = False
-# Response Parsing Template
-# {
-#     "total_count": 16171506,
-#     "incomplete_results": False,
-#     "items": [
-#         {
-#             "private": False,
-#             "url": "https://api.github.com/repos/Snailclimb/JavaGuide",
-#             "html_url": "https://github.com/Snailclimb/JavaGuide",
-#             "fork": False,
-#             "stargazers_count": 143601,
-#             "language": "Java",
-#             "topics":
-#             [
-#                 "algorithms",
-#                 "interview",
-#                 "java",
-#                 "jvm",
-#                 "mysql",
-#                 "redis",
-#                 "spring",
-#                 "system",
-#                 "system-design",
-#                 "zookeeper",
-#             ],
-#             "visibility": "public",
-#         },
-#     ],
-# }
-
 class GitHubAPI:
     def __init__(self, access_token, languages = ["Java"], topics = ["maven"], filename = "pom.xml", results_per_page=100) -> None:
         self.parameters = {
@@ -42,13 +11,19 @@ class GitHubAPI:
             "results_per_page": results_per_page,
         }
         self.headers = {
-            "Accept": "application/vnd.github.text-match+json",
+            "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {access_token}",
             "X-GitHub-Api-Version": "2022-11-28"
         }
         self.base_apiurl =  "https://api.github.com/search/repositories"
         self.base_query = self.build_base_query()
     
+    def check_rate_limit(self):
+        response = requests.get(url="https://api.github.com/rate_limit", headers=self.headers)
+        if response.status_code == 200:
+            response_dict = response.json()
+        return response_dict
+
     def build_base_query(self):
         query = "?q="
 
@@ -80,11 +55,15 @@ class GitHubAPI:
 
         return query
     
-    def perform_search(self, page_num):
-        # Extend the base URL to fetch
-        # multiple pages of the search.
-        final_url = self.base_apiurl + self.base_query + f"&page={page_num}"
+    def perform_search(self, page_num, sort = None, order = "desc"):
+        # Build the sort query
+        sort_query = ""
+        if sort is not None:
+            sort_query = f"&sort={sort}&order={order}"
         
+        # Extend the base URL to fetch multiple pages of the search.
+        final_url = self.base_apiurl + self.base_query + f"&page={page_num}" + sort_query
+
         # Query and fetch results
         discovered_repos = []
         response = requests.get(url=final_url, headers=self.headers)
