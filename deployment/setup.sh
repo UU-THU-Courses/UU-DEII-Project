@@ -9,7 +9,9 @@ then
     exit "$?";
 fi
 
+# Skipping the annoying prompts of kernel restart
 export NEEDRESTART_MODE=a
+sed -i "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
 
 # Perform updates and upgrade
 apt update; apt -y upgrade
