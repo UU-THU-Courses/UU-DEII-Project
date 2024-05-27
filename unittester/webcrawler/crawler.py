@@ -43,13 +43,13 @@ def rabbit_crawler(producer_queue, replica, max_replicas):
             # Search github using API for valid repositories, using batches
             for page in range(replica-1, MAX_PAGES+1, max_replicas):
                 try:
-                    wait_search_limit_reset()
-                    discovered_repos = api_search.perform_search(page_num=page)
+                    wait_search_limit_reset(api_search)
+                    discovered_repos = api_search.perform_search(page_num=page, sort=sortby, order=sortorder)
 
                     # Go through each discovered repository
                     # and validate that it contains pom.xml
                     for item in discovered_repos:
-                        wait_core_limit_reset()
+                        wait_core_limit_reset(api_search)
                         if api_search.validity_check(url = item["url"]):
                             prod.publish(message=json.dumps(obj = item))
 
