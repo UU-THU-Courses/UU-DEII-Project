@@ -60,7 +60,7 @@ def generate_cluster_summary():
         os.remove(temp_dump_file_2)            
         
         for container in containers:
-            temp_node["n_containers"] += 1
+            temp_node["n_containers"] += 1 if container["DesiredState"] == "Running" else 0
             temp_node["containers"] += [{
                 "name": container["Name"],
                 "image": container["Image"],
