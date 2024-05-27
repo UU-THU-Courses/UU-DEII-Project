@@ -9,32 +9,32 @@
     </div>
     <div class="card">
         <div class="card-body">
-                <table class="table" style="table-layout: fixed;">
-                    <thead>
+            <table class="table" style="table-layout: fixed;">
+                <thead>
+                <tr>
+                    <th style="width:15%;">Repository</th>
+                    <th style="width:25%">Link</th>
+                    <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Tests</th>
+                    <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Errors</th>
+                    <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Skipped</th>
+                    <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Failures</th>
+                    <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Runtime</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in repo_info %}
                     <tr>
-                        <th style="width:15%;">Repository</th>
-                        <th style="width:25%">Link</th>
-                        <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Tests</th>
-                        <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Errors</th>
-                        <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Skipped</th>
-                        <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Failures</th>
-                        <th style="width:12%; justify-content: right; text-align: right; align-items: right;">Runtime</th>
+                        <td style="word-wrap: break-word;">{{ item["reponame"] }}</td>
+                        <td style="word-wrap: break-word;">{{ item["repolink"] }}</td>
+                        <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["tests"] }}</td>
+                        <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["errors"] }}</td>
+                        <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["skipped"] }}</td>
+                        <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["failures"] }}</td>
+                        <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["runtime"] }}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in repo_info %}
-                        <tr>
-                            <td style="word-wrap: break-word;">{{ item["reponame"] }}</td>
-                            <td style="word-wrap: break-word;">{{ item["repolink"] }}</td>
-                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["tests"] }}</td>
-                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["errors"] }}</td>
-                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["skipped"] }}</td>
-                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["failures"] }}</td>
-                            <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ item["runtime"] }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

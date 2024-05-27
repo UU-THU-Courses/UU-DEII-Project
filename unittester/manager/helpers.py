@@ -73,7 +73,7 @@ def generate_cluster_summary():
     # Find service and their statuses
     temp_dump_file_3 = f"/temp_{identifier}_stack_services.json"
     with open(temp_dump_file_3, "w") as outfile:
-        subprocess.call([f"docker stack services ls --format json"], shell=True, stdout=outfile)
+        subprocess.call([f"docker stack services unittester --format json"], shell=True, stdout=outfile)
     with open(temp_dump_file_3, "r") as jsonfile: 
         services = [json.loads(obj) for obj in jsonfile.read().splitlines()]
     os.remove(temp_dump_file_3)  

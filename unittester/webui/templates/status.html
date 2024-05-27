@@ -42,37 +42,29 @@
         <h1>Unittester Stack Services</h1>
     </div>
     <div class="card-body">
-        {{ services }}
-        <!-- <table class="table">
+        <table class="table" style="table-layout: fixed;">
+            <thead>
+            <tr>
+                <th style="width:25%; justify-content: right; text-align: right; align-items: right;">Name</th>
+                <th style="width:25%; justify-content: right; text-align: right; align-items: right;">Image</th>
+                <th style="width:15%; justify-content: right; text-align: right; align-items: right;">Mode</th>
+                <th style="width:15%; justify-content: right; text-align: right; align-items: right;">Replicas</th>
+                <th style="width:20%; justify-content: right; text-align: right; align-items: right;">Ports</th>
+            </tr>
+            </thead>
             <tbody>
-            <tr>
-                <th style="width:25%; justify-content: left; text-align: left; align-items: left;"># of Cluster Nodes</th>
-                <th>:</th>
-                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["n_nodes"] }}</td>
-            </tr>
-            <tr>
-                <th style="width:25%; justify-content: left; text-align: left; align-items: left;"># of Swarm Managers</th>
-                <th>:</th>
-                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["managers"] }}</td>
-            </tr>
-            <tr>
-                <th style="width:25%; justify-content: left; text-align: left; align-items: left;"># of Swarm Workers</th>
-                <th>:</th>
-                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["workers"] }}</td>
-            </tr>
-            <tr>
-                <th style="width:25%; justify-content: left; text-align: left; align-items: left;">Swarm Manager Token</th>
-                <th>:</th>
-                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["manager_token"] }}</td>
-            </tr>
-            <tr>
-                <th style="width:25%; justify-content: left; text-align: left; align-items: left;">Swarm Worker Token</th>
-                <th>:</th>
-                <td style="width:70%; justify-content: left; text-align: left; align-items: left;">{{ summary["worker_token"] }}</td>
-            </tr>
+            {% for service in services %}
+                <tr>
+                    <td style="word-wrap: break-word; justify-content:  left; text-align:  left; align-items:  left;">{{ service["Name"] }}</td>
+                    <td style="word-wrap: break-word; justify-content:  left; text-align:  left; align-items:  left;">{{ service["Image"] }}</td>
+                    <td style="word-wrap: break-word; justify-content:  left; text-align:  left; align-items:  left;">{{ service["Mode"] }}</td>
+                    <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ service["Replicas"] }}</td>
+                    <td style="word-wrap: break-word; justify-content: right; text-align: right; align-items: right;">{{ service["{Ports}"] }}</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
-    </div> -->
+    </div>
 </div>
 <div class="card">
     <div class="card-header">
