@@ -7,7 +7,7 @@ from utils.instance import create_instance, delete_instance
 from utils.configs import parse_configs, write_configs
 from utils.keygen import generate_keypair, read_public_key
 
-def deploy_headnode(name_prefix, configs, ssh_key, github_access_token):
+def deploy_headnode(name_prefix, configs, ssh_keys, github_access_token):
     """A module to create the headnode and send config files."""
 
     cloud_cfg = parse_configs(config_path=configs["instance_configs"])
@@ -15,7 +15,10 @@ def deploy_headnode(name_prefix, configs, ssh_key, github_access_token):
     
     # Append new key for all users
     for user in cloud_cfg["users"]:
-        user["ssh_authorized_keys"].append(ssh_key)
+        if "ssh_authorized_keys" in user:
+            user["ssh_authorized_keys"].extend(ssh_keys)  
+        else:
+            user["ssh_authorized_keys"] = ssh_keys
 
     # Write GIT access token to a 
     # local file on the head node
@@ -40,7 +43,7 @@ def deploy_headnode(name_prefix, configs, ssh_key, github_access_token):
 
     return ip_addr
 
-def launch_workernodes(name_prefix, num_nodes, head_ip, configs, ssh_key):
+def launch_workernodes(name_prefix, num_nodes, head_ip, configs, ssh_keys):
 
     # Update cloud configurations in order to write
     # the head ip address to a temporary file at
@@ -58,8 +61,11 @@ def launch_workernodes(name_prefix, num_nodes, head_ip, configs, ssh_key):
         
         # Append new key for all users
         for user in cloud_cfg["users"]:
-            user["ssh_authorized_keys"].append(ssh_key)
-        
+            if "ssh_authorized_keys" in user:
+                user["ssh_authorized_keys"].extend(ssh_keys)  
+            else:
+                user["ssh_authorized_keys"] = ssh_keys
+
         # Write head ip to a file
         cloud_cfg["write_files"] = [{
             "content": f"{head_ip}",
@@ -120,18 +126,19 @@ def full_deployment(config_file = "configs/deploy-cfg.yaml", keypair_path="__tem
     identifier = random.randint(1000,9999)
 
     # Generate a new private/public keypair
-    ssh_key = generate_keypair(keypath=keypair_path, keyname=keyname)
+    new_ssh_key = generate_keypair(keypath=keypair_path, keyname=keyname)
+    ssh_keys = [new_ssh_key] + configs["ssh_authorized_keys"] if ("ssh_authorized_keys" in configs) else []
 
     # Perform deployment of headnode
     # rest all will be handled by headnode
     print("Deploying head node ... ")
-    head_ip = deploy_headnode(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", configs=configs["instances"]["headnode"], ssh_key=ssh_key, github_access_token=configs["github_access_token"])
+    head_ip = deploy_headnode(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", configs=configs["instances"]["headnode"], ssh_keys=ssh_keys, github_access_token=configs["github_access_token"])
     print(f"Head node deployed at {head_ip} ...")
     
     # Obtain the swarm token
     # docker swarm join-token manager -q
     print("\nDeploying worker nodes ... ")
-    worker_ips = launch_workernodes(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", num_nodes=configs["instances"]["workernodes"]["numworkers"], head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"], ssh_key=ssh_key)
+    worker_ips = launch_workernodes(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", num_nodes=configs["instances"]["workernodes"]["numworkers"], head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"], ssh_keys=ssh_keys)
 
 
 if __name__ == "__main__":

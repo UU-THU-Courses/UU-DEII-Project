@@ -2,6 +2,9 @@
 
 github_access_token:
 
+ssh_authorized_keys:
+  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC14CaNz7BAK1sDWZGAMvHu1NEonqltKL7X2kVNvAyZnxyksvN3WYSJqt1PVzlsT/wBqONeCwGgDEjIVTViaiZV4Tp7lE/5rotKIfEv13cj1Gj74VYJi21I9q7saOwVVodqmanvQU07zQKo4KsNBrXH9flyIqplHUGy11yN56KQHNyJmKVREN7OTA+A6FEtVyVgdQVSkp3NWobXRyHt/QV5NJ+tTDC/75VqOZQPeSkGetnInmDA3Uo0ZuxMuUymYVfa8EW2QPKLp90DKhsRubIkDSIPPdinjoRUSqbXjj2AGMKntrwdbk5HGcFoUsHlzeW+q/BZ+dfIVDX7DL1S8poWLGJKiJ5HSufLyD5WkguThDSUqzxEtOHBDK1YxgjxvvXFscF0gyVVzJq2ikS5xLK/PUTzwA3PPPxLwhOvS2nhJq5Lw8zATWqkRTrhQK0BX70gO/jAfmDW06J0i+B1Sb+nLg2OCkz3ItvOwGhdx9v1svaR+R11LQFAzZ/uIscpu3U= user\usaza315@IT-5GGC5W3
+
 instances:
   name_prefix: UZ                 # Used to create the node name
                                   # Template: prefix-int(4)-headnode
@@ -13,7 +16,6 @@ instances:
     private_network: UPPMAX 2024/1-4 Internal IPv4 Network
     security_groups:
       - default
-      - usama-sg
     floating_ip_pool: null
     floating_ip_addr: null
     instance_configs: configs/headnode-cfg.yaml
