@@ -1,4 +1,5 @@
 import os, io
+import json
 import argparse
 from helpers import MongodbReader, generate_summary, fetch_cluster_info
 
@@ -83,7 +84,7 @@ def failures():
 def cluster_status():
     # Build test node info
     cluster_info = fetch_cluster_info()
-    return render_template("status.html", node_info=cluster_info["node_info"], summary=cluster_info["summary"])
+    return render_template("status.html", node_info=cluster_info["node_info"], summary=cluster_info["summary"], services=json.dumps(cluster_info["services"]))
 
 @app.route("/download-report/<record_id>")
 def download_report(record_id):
