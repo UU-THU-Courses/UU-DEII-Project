@@ -8,8 +8,6 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     home: /home/ubuntu
     shell: /bin/bash
-    ssh_authorized_keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC14CaNz7BAK1sDWZGAMvHu1NEonqltKL7X2kVNvAyZnxyksvN3WYSJqt1PVzlsT/wBqONeCwGgDEjIVTViaiZV4Tp7lE/5rotKIfEv13cj1Gj74VYJi21I9q7saOwVVodqmanvQU07zQKo4KsNBrXH9flyIqplHUGy11yN56KQHNyJmKVREN7OTA+A6FEtVyVgdQVSkp3NWobXRyHt/QV5NJ+tTDC/75VqOZQPeSkGetnInmDA3Uo0ZuxMuUymYVfa8EW2QPKLp90DKhsRubIkDSIPPdinjoRUSqbXjj2AGMKntrwdbk5HGcFoUsHlzeW+q/BZ+dfIVDX7DL1S8poWLGJKiJ5HSufLyD5WkguThDSUqzxEtOHBDK1YxgjxvvXFscF0gyVVzJq2ikS5xLK/PUTzwA3PPPxLwhOvS2nhJq5Lw8zATWqkRTrhQK0BX70gO/jAfmDW06J0i+B1Sb+nLg2OCkz3ItvOwGhdx9v1svaR+R11LQFAzZ/uIscpu3U= user\usaza315@IT-5GGC5W3
 
 packages:
   - python3-pip
