@@ -110,7 +110,7 @@ services:
     build: ./unittester/webcrawler
     environment:
       REPLICA: "{{.Task.Slot}}"
-      MAX_REPLICA: 1
+      MAX_REPLICA: 4
     networks:
       - frontend
     depends_on:
@@ -118,7 +118,7 @@ services:
     volumes:
       - /crawlerdata:/crawlerdata
     deploy:
-      replicas: 1
+      replicas: 4
       restart_policy:
         condition: on-failure
       placement:
@@ -140,7 +140,7 @@ services:
       placement:
         constraints:
           - "node.role==worker"
-        max_replicas_per_node: 8
+        max_replicas_per_node: 16
 
 networks:
   frontend:
