@@ -7,6 +7,8 @@ from search_github import GitHubAPI
 # Declare few paths
 MAX_PAGES   = 10
 PER_PAGE    = 100
+SORTINGS    = [None, "stars", "forks", "updated"]
+ORDERING    = ["desc", "asc"]
 
 with open("/crawlerdata/GITHUB_ACCESS_TOKEN.txt", "r") as f:
     GITHUB_ACCESS_TOKEN = f.read().strip()
@@ -19,6 +21,7 @@ def wait_search_limit_reset(api_search):
         if rate_limit["limit"] > rate_limit["used"]: 
             break
         time.sleep(60)
+    return rate_limit["limit"], rate_limit["used"], rate_limit["remaining"]
 
 def wait_core_limit_reset(api_search):
     """Wait 1 hour for the core limit to reset"""
@@ -27,6 +30,7 @@ def wait_core_limit_reset(api_search):
         if rate_limit["limit"] > rate_limit["used"]: 
             break
         time.sleep(3600)
+    return rate_limit["limit"], rate_limit["used"], rate_limit["remaining"]
 
 def rabbit_crawler(producer_queue, replica, max_replicas):
     # Create a producer instance
@@ -38,24 +42,31 @@ def rabbit_crawler(producer_queue, replica, max_replicas):
         results_per_page=PER_PAGE,
     )
 
-    for sortby in [None, "stars", "forks", "updated"]:
-        for sortorder in ["desc", "asc"]:
+    core_wait_limit = 0
+    for sortby in SORTINGS:
+        for sortorder in ORDERING:
+            # Skip processing the non-availability of sortby
+            # twice (which will default to best match)
+            if sortby is None and sortorder is "asc": continue
             # Search github using API for valid repositories, using batches
             for page in range(replica-1, MAX_PAGES+1, max_replicas):
                 try:
                     wait_search_limit_reset(api_search)
                     discovered_repos = api_search.perform_search(page_num=page, sort=sortby, order=sortorder)
-
                     # Go through each discovered repository
                     # and validate that it contains pom.xml
                     for item in discovered_repos:
-                        wait_core_limit_reset(api_search)
+                        core_wait_limit -= 1
+                        # Wait for core limit to reset before making
+                        # further queries on repositories
+                        if core_wait_limit <= 0:
+                            _limit, _used, _remain = wait_core_limit_reset(api_search=api_search)
+                            core_wait_limit = _remain // max_replicas                            
+                        # wait_core_limit_reset(api_search)
                         if api_search.validity_check(url = item["url"]):
                             prod.publish(message=json.dumps(obj = item))
-
                 except Exception as e:
                     pass
-
     del prod
 
 def pulsar_crawler(producer_queue, replica, max_replicas):
@@ -68,20 +79,31 @@ def pulsar_crawler(producer_queue, replica, max_replicas):
         results_per_page=PER_PAGE,
     )
 
-    # Search github using API for valid 
-    # repositories, using batches
-    for page in range(replica, MAX_PAGES+1, max_replicas):
-        discovered_repos = api_search.perform_search(page_num=page)
-
-        # Go through each discovered repository
-        # and validate that it contains pom.xml
-        for item in discovered_repos:
-            if api_search.validity_check(url = item["url"]):
-                prod.publish(message=json.dumps(obj = item))
-
-        # Sleep between batches
-        if (page * PER_PAGE) % 1000 == 0: time.sleep(60)
-
+    core_wait_limit = 0
+    for sortby in SORTINGS:
+        for sortorder in ORDERING:
+            # Skip processing the non-availability of sortby
+            # twice (which will default to best match)
+            if sortby is None and sortorder is "asc": continue
+            # Search github using API for valid repositories, using batches
+            for page in range(replica-1, MAX_PAGES+1, max_replicas):
+                try:
+                    wait_search_limit_reset(api_search)
+                    discovered_repos = api_search.perform_search(page_num=page, sort=sortby, order=sortorder)
+                    # Go through each discovered repository
+                    # and validate that it contains pom.xml
+                    for item in discovered_repos:
+                        core_wait_limit -= 1
+                        # Wait for core limit to reset before making
+                        # further queries on repositories
+                        if core_wait_limit <= 0:
+                            _limit, _used, _remain = wait_core_limit_reset(api_search=api_search)
+                            core_wait_limit = _remain // max_replicas                            
+                        # wait_core_limit_reset(api_search)
+                        if api_search.validity_check(url = item["url"]):
+                            prod.publish(message=json.dumps(obj = item))
+                except Exception as e:
+                    pass
     del prod
 
 if __name__ == "__main__":
