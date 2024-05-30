@@ -2,12 +2,12 @@ import pika, time
 
 class Producer:
     def __init__(self, host="rabbit", port=5672, username="rabbitmq", password="rabbitmq", queue="gitrepos") -> None:
+        self.connection_params = pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password), heartbeat=1200)
         self.connection = None
         self.channel = None
         while True:
             try: 
-                self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=pika.PlainCredentials(username, password), heartbeat=1200))
-                self.channel = self.connection.channel()
+                self.reconnect()
                 break
             except:
                 # Sleep for 60 seconds, probably the 
@@ -17,6 +17,11 @@ class Producer:
         # Declare a queue with specified queue name
         self.queue = queue
         self.channel.queue_declare(queue=queue, durable=True)
+
+    def reconnect(self):
+        if self.connection is None or self.connection.is_closed:
+            self.connection = pika.BlockingConnection(self.connection_params)
+            self.channel = self.connection.channel()
 
     def publish(self, message):
         self.channel.basic_publish(
