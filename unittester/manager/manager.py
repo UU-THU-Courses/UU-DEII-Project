@@ -29,7 +29,7 @@ def send_token():
 @app.route("/run-workers", methods=["POST"])
 def fill_node():    
     if request.method == "POST":
-        subprocess.call("bash /project/unittester/manager/scripts/scaleup.sh", shell=True)
+        subprocess.call(f"bash /project/unittester/manager/scripts/scaleup.sh {request.args['count']}", shell=True)
         return Response("Success!", 200)
     else:
         return Response("Only POST available!", 400)

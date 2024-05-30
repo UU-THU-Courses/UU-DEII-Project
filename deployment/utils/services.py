@@ -65,7 +65,7 @@ def request_workload():
     status_code = -1
     while status_code != 200:
         try:
-            response = requests.post(f"http://{manager_addr}:5200/run-workers", params={"count": 4}, timeout=5)
+            response = requests.post(f"http://{manager_addr}:5200/run-workers", params={"count": 32}, timeout=5)
             status_code = response.status_code
             print(f"Got status code: {status_code} ...")
         except:

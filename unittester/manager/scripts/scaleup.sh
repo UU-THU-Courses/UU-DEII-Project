@@ -1,6 +1,6 @@
 #!/bin/bash
 
-add_count=8
+add_count=16
 [ ! -z "$1" ] && add_count="$1"
 
 # Fetch current replica count
