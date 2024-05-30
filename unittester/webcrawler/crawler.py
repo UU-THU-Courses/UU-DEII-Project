@@ -70,8 +70,8 @@ def rabbit_crawler(producer_queue, replica, max_replicas):
                         if api_search.validity_check(url = item["url"]):
                             prod.publish(message=json.dumps(obj = item))
                 except Exception as e:
-                    print("\n\nException Occured!!!\n\n" + e.__str__()+"\n\n")
-                    pass
+                    print("\n\nException Occured!!!\n" + e.__str__()+"\n")
+                    prod.reconnect()
     del prod
 
 def pulsar_crawler(producer_queue, replica, max_replicas):
