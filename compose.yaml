@@ -140,7 +140,7 @@ services:
       placement:
         constraints:
           - "node.role==worker"
-#        max_replicas_per_node: 16
+        max_replicas_per_node: 32
 
 networks:
   frontend:
