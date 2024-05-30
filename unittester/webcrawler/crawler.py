@@ -13,7 +13,6 @@ ORDERING    = ["desc", "asc"]
 with open("/crawlerdata/GITHUB_ACCESS_TOKEN.txt", "r") as f:
     GITHUB_ACCESS_TOKEN = f.read().strip()
 
-
 def wait_search_limit_reset(api_search):
     """Wait 1 minute for search limit to reset"""
     while True:
