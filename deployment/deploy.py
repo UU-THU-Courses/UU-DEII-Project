@@ -105,7 +105,7 @@ def add_workernodes(num_nodes, head_ip = None, config_file="configs/deploy-cfg.y
 
     # Obtain the swarm token
     print("\nDeploying worker nodes ... ")
-    worker_ips = launch_workernodes(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", num_nodes=num_nodes, head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"], ssh_key=None)
+    worker_ips = launch_workernodes(name_prefix=f"{configs['instances']['name_prefix']}-{identifier}", num_nodes=num_nodes, head_ip=head_ip, configs=configs["instances"]["workernodes"]["workercfgs"], ssh_keys=None)
 
 def del_workernodes(num_nodes, head_ip, manager_port = 5200):
     response = requests.post(f"http://{head_ip}:{manager_port}/drain-node", params={"node_count": num_nodes}, timeout=120)
